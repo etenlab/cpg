@@ -1,12 +1,31 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { dbService } from '..';
+import { useEffect, useState } from 'react';
 import UserAddForm from '../components/UserAddForm';
 import UserList from '../components/UserList';
+import useRepositories from '../hooks/useRepositories';
+import { User } from '../models/User';
 import './Home.css';
 
 const Home: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const { userRepository } = useRepositories();
 
-  console.log(dbService)
+  const getUsers = () => {
+    userRepository?.all().then((data) => {
+      setUsers(data);
+    });
+  }
+
+  const addUserHandler = (user: any) => {
+    user.id = undefined;
+    userRepository?.save(user).then(() => {
+      getUsers();
+    });
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, [userRepository]);
 
   return (
     <IonPage>
@@ -21,8 +40,8 @@ const Home: React.FC = () => {
             <IonTitle size="large">Crowd Peer Graph</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <UserList />
-        <UserAddForm />
+        <UserList users={users} />
+        <UserAddForm addUserHandler={addUserHandler} />
       </IonContent>
     </IonPage>
   );

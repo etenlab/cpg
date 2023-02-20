@@ -3,14 +3,14 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id!: number
+    readonly id!: number
 
-    @Column()
+    @Column("varchar")
     firstName: string | undefined
 
-    @Column()
+    @Column("varchar")
     lastName: string | undefined
 
-    @Column()
+    @Column("int")
     age: number | undefined
 }

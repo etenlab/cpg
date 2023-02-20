@@ -1,15 +1,31 @@
-import { dbService } from '..';
-import './UserList.css';
+import User from "./User";
+import { User as UserModel } from "../models/User";
+import "./UserList.css";
 
-interface ContainerProps { }
+interface ContainerProps {
+  users: UserModel[];
+}
 
-const UserList: React.FC<ContainerProps> = () => {
-
-  dbService.status() // calling this function just to show this singleton being imported
-
+const UserList: React.FC<ContainerProps> = ({ users }) => {
   return (
     <div className="container">
       User List
+      <table className="user-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+          </tr>
+        </thead>
+        <tbody>
+          {!!users &&
+            users.map((user) => (
+              <User user={user} key={`user-${user["id"]}`} />
+            ))}
+        </tbody>
+      </table>
     </div>
   );
 };

@@ -1,12 +1,18 @@
 import './User.css';
+import { User as UserModel } from '../models/User';
 
-interface ContainerProps { }
+interface ContainerProps {
+  user: UserModel
+}
 
-const User: React.FC<ContainerProps> = () => {
+const User: React.FC<ContainerProps> = ({ user }) => {
   return (
-    <div className="container">
-      User
-    </div>
+    <tr>
+      <td>{user.id}</td>
+      <td>{user.firstName}</td>
+      <td>{user.lastName}</td>
+      <td>{user.age}</td>
+    </tr>
   );
 };
 
