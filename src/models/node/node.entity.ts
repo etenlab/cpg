@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from "typeorm"
 import { nanoid } from "nanoid"
-import { NodeType } from "./NodeType"
+import { NodeType } from "./node-type.entity"
 
 @Entity()
 export class Node {

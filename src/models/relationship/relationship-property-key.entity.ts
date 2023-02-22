@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, Index } from "typeorm"
 import { nanoid } from "nanoid"
-import { Relationship } from "./Relationship"
+import { Relationship } from "./relationship.entity"
 
 @Entity()
 export class RelationshipPropertyKey {
