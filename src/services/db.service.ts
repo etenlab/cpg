@@ -33,14 +33,14 @@ export class DbService {
 
   private configureConnection() {
     this.localForage.config({
-      description: "cpg",
+      description: "user",
       driver: this.localForage.INDEXEDDB,
     });
 
     return new DataSource({
       type: "sqljs",
       autoSave: true,
-      location: "cpg",
+      location: "user",
       useLocalForage: true,
       logging: ["error", "query", "schema"],
       synchronize: true,
