@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, Index, RelationId } from "typeorm"
+import { Entity, Column, PrimaryColumn, ManyToOne, Index, RelationId, OneToMany } from "typeorm"
 import { nanoid } from "nanoid"
 import { Node } from "../node/node.entity"
 import { RelationshipType } from "./relationship-type.entity"
+import { RelationshipPropertyKey } from "./relationship-property-key.entity"
 
 @Entity()
 export class Relationship {
@@ -28,4 +29,7 @@ export class Relationship {
     @Index("idx_relationships_to_node_uuid")
     @RelationId((node: Node) => node.node_uuid)
     to_node_uuid!: string
+
+    @OneToMany(() => RelationshipPropertyKey, (relationship_property_key) => relationship_property_key.relationship)
+    property_keys!: RelationshipPropertyKey[]
 }

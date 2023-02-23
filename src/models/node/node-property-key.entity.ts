@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, Index, RelationId } from "typeorm"
+import { Entity, Column, PrimaryColumn, ManyToOne, Index, RelationId, OneToOne } from "typeorm"
 import { nanoid } from "nanoid"
 import { Node } from "./node.entity"
+import { NodePropertyValue } from "./node-property-value.entity"
 
 @Entity()
 export class NodePropertyKey {
@@ -10,6 +11,9 @@ export class NodePropertyKey {
     @Column("null")
     readonly node_property_key_id: number | undefined
 
+    @Column("varchar")
+    property_key!: string
+
     @ManyToOne(() => Node)
     node!: Node
 
@@ -17,6 +21,6 @@ export class NodePropertyKey {
     @RelationId((node: Node) => node.node_uuid)
     node_uuid!: string
 
-    @Column("varchar")
-    property_key!: string
+    @OneToOne(() => NodePropertyValue)
+    property_value!: NodePropertyValue
 }

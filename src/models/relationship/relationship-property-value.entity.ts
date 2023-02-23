@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, Index, RelationId } from "typeorm"
+import { Entity, Column, PrimaryColumn, Index, RelationId, OneToOne } from "typeorm"
 import { nanoid } from "nanoid"
 import { RelationshipPropertyKey } from "./relationship-property-key.entity"
 
@@ -13,8 +13,7 @@ export class RelationshipPropertyValue {
     @Column("jsonb")
     property_value!: JSON[]
 
-    @ManyToOne(() => RelationshipPropertyKey)
-    relationship_property_key!: RelationshipPropertyKey
+    @OneToOne(() => RelationshipPropertyKey)
 
     @Index("idx_relationship_property_values_key_uuid")
     @RelationId((relationship_property_key: RelationshipPropertyKey) => relationship_property_key.relationship_property_key_uuid)
