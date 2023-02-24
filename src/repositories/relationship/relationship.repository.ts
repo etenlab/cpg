@@ -10,18 +10,14 @@ export class RelationshipRepository {
     this.repository = this.dbService.dataSource.getRepository(Relationship);
   }
 
-  async createRelationship(
-    node_1: string,
-    node_2: string,
-    type_name: string
-  ): Promise<string | undefined> {
+  async createRelationship(node_1: string, node_2: string, type_name: string): Promise<Relationship> {
     const relationship = await this.repository.save({
       from_node_uuid: node_1,
       to_node_uuid: node_2,
       relationship_type: type_name,
     });
 
-    return relationship.relationship_uuid;
+    return relationship;
   }
 
   async listAllRelationshipsByType(type_name: string): Promise<Relationship[]> {

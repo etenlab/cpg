@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, Index, RelationId, OneToOne } from "typeorm"
+import { Entity, Column, PrimaryColumn, ManyToOne, Index, RelationId, OneToOne, JoinColumn } from "typeorm"
 import { nanoid } from "nanoid"
 import { Node } from "./node.entity"
 import { NodePropertyValue } from "./node-property-value.entity"
@@ -22,5 +22,6 @@ export class NodePropertyKey {
     node_uuid!: string
 
     @OneToOne(() => NodePropertyValue)
+    @JoinColumn()
     property_value!: NodePropertyValue
 }

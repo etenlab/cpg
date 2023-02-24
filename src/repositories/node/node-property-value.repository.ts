@@ -9,7 +9,7 @@ export class NodePropertyValueRepository {
     this.repository = this.dbService.dataSource.getRepository(NodePropertyValue);
   }
 
-  async createNodePropertyValue(key_id: string, key_value: any): Promise<string | undefined> {
+  async createNodePropertyValue(key_id: string, key_value: any): Promise<string> {
     const node_property_value = await this.repository.save({
       node_property_key_uuid: key_id,
       property_value: key_value,

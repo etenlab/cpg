@@ -9,12 +9,23 @@ export class RelationshipPropertyKeyRepository {
     this.repository = this.dbService.dataSource.getRepository(RelationshipPropertyKey);
   }
 
-  async createRelationshipPropertyKey(rel_id: string, key_name: string): Promise<string | undefined> {
-    const relationship_property_key = await this.repository.save({
+  async createRelationshipPropertyKey(rel_id: string, key_name: string): Promise<string> {
+    const property_key = await this.repository.findOne({
+      where: {
+        relationship_uuid: rel_id,
+        property_key: key_name,
+      }
+    });
+
+    if (property_key) {
+      return property_key.relationship_property_key_uuid;
+    }
+
+    const new_property_key = await this.repository.save({
       relationship_uuid: rel_id,
       property_key: key_name,
     });
 
-    return relationship_property_key.relationship_property_key_uuid;
+    return new_property_key.relationship_property_key_uuid;
   }
 }

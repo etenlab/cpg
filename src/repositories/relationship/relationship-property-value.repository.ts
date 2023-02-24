@@ -9,7 +9,7 @@ export class RelationshipPropertyValueRepository {
     this.repository = this.dbService.dataSource.getRepository(RelationshipPropertyValue);
   }
 
-  async createRelationshipPropertyValue(key_id: string, key_value: any): Promise<string | undefined> {
+  async createRelationshipPropertyValue(key_id: string, key_value: any): Promise<string> {
     const relationship_property_value = await this.repository.save({
       relationship_property_key_uuid: key_id,
       property_value: key_value,

@@ -10,8 +10,6 @@ export class NodePropertyValue {
     @Column("null")
     readonly node_property_value_id: number | undefined
 
-    @OneToOne(() => NodePropertyKey)
-
     @Index("idx_node_property_values_key_uuid")
     @RelationId((node_property_key: NodePropertyKey) => node_property_key.node_property_key_uuid)
     node_property_key_uuid!: string

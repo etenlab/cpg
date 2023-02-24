@@ -1,6 +1,7 @@
 import { Repository } from "typeorm";
 import { Node } from "../../models/node/node.entity";
 import { DbService } from "../../services/db.service";
+import { NodePropertyKey } from "../../models/node/node-property-key.entity";
 
 export class NodeRepository {
   repository!: Repository<Node>;
@@ -9,7 +10,7 @@ export class NodeRepository {
     this.repository = this.dbService.dataSource.getRepository(Node);
   }
 
-  async createNode(type_name: string): Promise<string | undefined> {
+  async createNode(type_name: string): Promise<string> {
     const node = await this.repository.save({
       node_type: type_name,
     });
