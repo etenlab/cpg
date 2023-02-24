@@ -45,8 +45,36 @@ export class NodeService {
     return relationship.relationship_uuid;
   }
 
-  async createRelatedNodeFromObject(node_uuid: string, rel_type_name: string, obj: {}) {
+  async createRelatedFromNodeFromObject(node_uuid: string, node_type_name: string, rel_type_name: string, obj: {}) {
+    const to_node = await this.nodeRepo.readNode(node_uuid);
+    if (!to_node) {
+      return null;
+    }
 
+    const from_node_uuid = await this.createNodeFromObject(node_type_name, obj);
+    const relationship = await this.relationshipRepo.createRelationship(from_node_uuid, node_uuid, rel_type_name);
+
+    const from_node = await this.nodeRepo.readNode(from_node_uuid);
+    return {
+      relationship: relationship,
+      node: from_node,
+    };
+  }
+
+  async createRelatedToNodeFromObject(node_uuid: string, node_type_name: string, rel_type_name: string, obj: {}) {
+    const from_node = await this.nodeRepo.readNode(node_uuid);
+    if (!from_node) {
+      return null;
+    }
+
+    const to_node_uuid = await this.createNodeFromObject(node_type_name, obj);
+    const relationship = await this.relationshipRepo.createRelationship(node_uuid, to_node_uuid, rel_type_name);
+
+    const to_node = await this.nodeRepo.readNode(to_node_uuid);
+    return {
+      relationship: relationship,
+      node: to_node,
+    };
   }
 
   async upsertNodeObject(node_uuid: string, obj: Object): Promise<Node | null> {
@@ -54,6 +82,7 @@ export class NodeService {
     if (!node) {
       return null;
     }
+
     Object.entries(obj).forEach(async ([key, value]) => {
       const property_key_uuid = await this.nodePropertyKeyRepo.createNodePropertyKey(node.node_uuid, key);
       await this.nodePropertyValueRepo.createNodePropertyValue(property_key_uuid, value);
@@ -73,9 +102,5 @@ export class NodeService {
     });
 
     return rel;
-  }
-
-  async upsertRelatedObject(node_uuid: string, rel_type_name: string, obj: {}) {
-
   }
 }
