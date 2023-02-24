@@ -1,6 +1,6 @@
-import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
+import {Redirect, Route} from 'react-router-dom';
+import {IonApp, IonRouterOutlet, setupIonicReact} from '@ionic/react';
+import {IonReactRouter} from '@ionic/react-router';
 import Home from './pages/Home';
 
 /* Core CSS required for Ionic components to work properly */
@@ -21,22 +21,31 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import {AllDiscussion} from "./pages/Discussion/AllDiscussion";
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/home">
-          <Home />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/home" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+
+    const initialPage = '/discussions'
+
+    return (
+        <IonApp>
+            <IonReactRouter>
+                <IonRouterOutlet>
+                    <Route exact path="/home">
+                        <Home/>
+                    </Route>
+                    <Route path="/discussions">
+                        <AllDiscussion/>
+                    </Route>
+                    <Route exact path="/">
+                        <Redirect to={initialPage}/>
+                    </Route>
+                </IonRouterOutlet>
+            </IonReactRouter>
+        </IonApp>
+    )
+};
 
 export default App;

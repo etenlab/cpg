@@ -24,5 +24,8 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "paths": {
+    "@app/*": ["src/eil-discussion-box/*"],
+  }
 }
