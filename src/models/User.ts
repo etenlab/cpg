@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm"
+import {Discussion} from "./Discussions";
+import {Message} from "./Message";
 
 @Entity()
 export class User {
@@ -13,4 +15,10 @@ export class User {
 
     @Column("int")
     age: number | undefined
+
+    @OneToMany(() => Discussion, (discussion) => discussion.user)
+    discussions!: Discussion[]
+
+    @OneToMany(() => Message, (messages => messages.user))
+    messages!: Message[]
 }
