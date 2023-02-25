@@ -2,7 +2,7 @@ import {Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn
 import {User} from "./User";
 import {Discussion} from "./Discussions";
 
-@Entity('discussion', {schema: 'admin'})
+@Entity()
 export class Message {
     @PrimaryGeneratedColumn({type: 'integer', name: 'id'})
     id!: number;

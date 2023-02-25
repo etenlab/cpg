@@ -1,13 +1,17 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {User} from "./User";
 
-@Entity('discussion', {schema: 'admin'})
+@Entity()
 export class Discussion {
-    @PrimaryGeneratedColumn({type: 'integer', name: 'id'})
+    @PrimaryGeneratedColumn('increment', {type: 'integer', name: 'id'})
     id!: number;
 
-    @Column('string')
+    @Column('varchar')
     title!: string;
+
+
+    @Column('text')
+    text!: string;
 
     @ManyToOne(() => User, (user) => user.discussions)
     user!: User

@@ -12,6 +12,7 @@ const Home: React.FC = () => {
 
   const getUsers = () => {
     userRepository?.all().then((data) => {
+      console.log(data)
       setUsers(data);
     });
   }

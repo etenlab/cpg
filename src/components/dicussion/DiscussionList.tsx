@@ -93,8 +93,7 @@ export const DiscussionList: React.FC<PropsDiscussionList> = ({discussions}) => 
                             }}
                         >
                             <ListItemText
-                                // primary={`${table_name} #${row}`}
-                                secondary={`Total discussions: ###}`}
+                                primary={title}
                             />
                         </ListItem>
                         <Divider/>

@@ -22,6 +22,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import {AllDiscussion} from "./pages/Discussion/AllDiscussion";
+import { ThemeProvider } from '@eten-lab/ui-kit';
 
 setupIonicReact();
 
@@ -30,6 +31,7 @@ const App: React.FC = () => {
     const initialPage = '/discussions'
 
     return (
+        <ThemeProvider >
         <IonApp>
             <IonReactRouter>
                 <IonRouterOutlet>
@@ -45,6 +47,7 @@ const App: React.FC = () => {
                 </IonRouterOutlet>
             </IonReactRouter>
         </IonApp>
+        </ThemeProvider>
     )
 };
 

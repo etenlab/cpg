@@ -1,70 +1,72 @@
-import initSqlJs, { Database } from "sql.js";
-import { DataSource, Repository } from "typeorm";
-import { User } from "../models/User";
+import initSqlJs, {Database} from "sql.js";
+import {DataSource, Repository} from "typeorm";
+import {User} from "../models/User";
+import {Discussion} from "../models/Discussions";
+import {Message} from "../models/Message";
 
 export class DbService {
-  // todo
-  localForage: any;
-  dataSource!: DataSource;
-  private startupSubscriptions: Function[] = [];
-
-  constructor() {
     // todo
-    this.initLocalForage().then(() => {
-      initSqlJs({
-        locateFile: (file: any) => `https://sql.js.org/dist/${file}`,
-      }).then(async (SQL) => {
-        (window as any).SQL = SQL;
-        this.dataSource = this.configureConnection();
-        this.dataSource.initialize();
-      });
-    });
-  }
+    localForage: any;
+    dataSource!: DataSource;
+    private startupSubscriptions: Function[] = [];
 
-  onStartup(fn: Function) {
-    this.startupSubscriptions.push(fn);
-  }
+    constructor() {
+        // todo
+        this.initLocalForage().then(() => {
+            initSqlJs({
+                locateFile: (file: any) => `https://sql.js.org/dist/${file}`,
+            }).then(async (SQL) => {
+                (window as any).SQL = SQL;
+                this.dataSource = this.configureConnection();
+                this.dataSource.initialize();
+            });
+        });
+    }
 
-  private async initLocalForage() {
-    const localForageImport = await import("localforage");
-    this.localForage = localForageImport.default;
-    (window as any).localforage = this.localForage;
-  }
+    onStartup(fn: Function) {
+        this.startupSubscriptions.push(fn);
+    }
 
-  private configureConnection() {
-    this.localForage.config({
-      description: "user",
-      driver: this.localForage.INDEXEDDB,
-    });
+    private async initLocalForage() {
+        const localForageImport = await import("localforage");
+        this.localForage = localForageImport.default;
+        (window as any).localforage = this.localForage;
+    }
 
-    return new DataSource({
-      type: "sqljs",
-      autoSave: true,
-      location: "user",
-      useLocalForage: true,
-      logging: ["error", "query", "schema"],
-      synchronize: true,
-      entities: [User],
-    });
-  }
+    private configureConnection() {
+        this.localForage.config({
+            description: "user",
+            driver: this.localForage.INDEXEDDB,
+        });
 
-  status() {
-    console.log("//todo");
-  }
+        return new DataSource({
+            type: "sqljs",
+            autoSave: true,
+            location: "user",
+            useLocalForage: true,
+            logging: ["error", "query", "schema"],
+            synchronize: true,
+            entities: [User, Discussion, Message],
+        });
+    }
+
+    status() {
+        console.log("//todo");
+    }
 }
 
 export class UserRepository {
-  repository!: Repository<User>;
+    repository!: Repository<User>;
 
-  constructor(private dbService: DbService) {
-    this.repository = this.dbService.dataSource.getRepository(User);
-  }
+    constructor(private dbService: DbService) {
+        this.repository = this.dbService.dataSource.getRepository(User);
+    }
 
-  async save(user: User) {
-    return this.repository.save(user);
-  }
+    async save(user: User) {
+        return this.repository.save(user);
+    }
 
-  async all() {
-    return this.repository.find();
-  }
+    async all() {
+        return this.repository.find();
+    }
 }

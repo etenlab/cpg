@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserRepository } from "../services/db.service";
 import useDbService from "./useDbService";
-import {DiscussionRepository} from "../services/repositories/DiscussionRepository";
+import {DiscussionRepository} from "../repositories/discussion/DiscussionRepository";
 
 export default function useRepositories() {
   const { service } = useDbService();
