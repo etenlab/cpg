@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+    IonButton,
     IonContent,
     IonFooter,
     IonHeader,
@@ -8,62 +9,60 @@ import {
     IonTitle,
     IonToolbar
 } from "@ionic/react";
-import {CreateDiscussion} from "../../components/dicussion/CreateDiscussion/CreateDiscussion";
-import {DiscussionList} from "../../components/dicussion/DiscussionList";
+import { CreateDiscussion } from "../../components/dicussion/CreateDiscussion/CreateDiscussion";
+import { DiscussionList } from "../../components/dicussion/DiscussionList";
 import useRepositories from "../../hooks/useRepositories";
-import {Discussion} from "../../models/Discussions";
-import {PlusButton} from "@eten-lab/ui-kit";
+import { Discussion } from "../../models/Discussions";
+import { PlusButton, Toolbar, Typography } from "@eten-lab/ui-kit";
+
+const sampleData: Discussion[] = [{ title: 'Discussoin Title #1', text: '', id: 1, user: Object.create(null) }, { title: 'Discussoin Title #2', text: '', id: 2, user: Object.create(null) }]
 
 export const AllDiscussion = () => {
     // const {discussionRepository} = useRepositories();
     const [isCreateDiscussionShow, setIsCreateDiscussionShow] = useState<boolean>()
-    const {discussionRepository} = useRepositories()
-    const [discussions, setDiscussions] = useState<Discussion[]>()
+    const { discussionRepository } = useRepositories()
+    const [discussions, setDiscussions] = useState<Discussion[]>(sampleData)
     const createDiscussion = () => {
         setIsCreateDiscussionShow(true)
     }
 
     useEffect(() => {
-        console.log('get discussions')
         discussionRepository?.getAll()
             .then((data) => {
-                console.log(`
-            
-        discussions
-        
-        `)
-                console.log(data[data.length - 1])
-                // console.log(data)
-                setDiscussions(data)
+                setDiscussions(sampleData)
             })
-        console.log(isCreateDiscussionShow)
     }, [discussionRepository, isCreateDiscussionShow])
 
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
-                    <IonTitle>All Discussions</IonTitle>
-                </IonToolbar>
+                <Toolbar title='Showcase' buttons={{ discussion: true, notification: true, menu: true }} onClickMenuBtn={() => { }} onClickDiscussionBtn={() => { }} onClickNotificationBtn={() => { }} />
             </IonHeader>
-            <IonContent style={{height: 'fit-content'}}>
-                {discussions && <DiscussionList discussions={discussions}/>}
+            <IonContent className='ion-padding' style={{ height: 'fit-content' }}>
+                <Typography variant='h2'>Discussions</Typography>
+                {
+                    discussions?.length
+                        ?
+                        <DiscussionList discussions={discussions} />
+                        :
+                        <></>
+                }
             </IonContent>
 
             {isCreateDiscussionShow &&
-                <IonContent>
-                    <CreateDiscussion setIsCreateDiscussionShow={setIsCreateDiscussionShow}/>
+                <IonContent className='ion-padding'>
+                    <CreateDiscussion setIsCreateDiscussionShow={setIsCreateDiscussionShow} />
                 </IonContent>
             }
 
-            <IonFooter>
+            {/* <IonFooter>
                 <IonToolbar>
-                    <PlusButton variant={'primary'} onClick={createDiscussion}/>
+                    <PlusButton variant={'primary'} onClick={createDiscussion} />
                     <IonText>
                         new Post
                     </IonText>
                 </IonToolbar>
-            </IonFooter>
+            </IonFooter> */}
         </IonPage>
     );
 };

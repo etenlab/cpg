@@ -1,5 +1,5 @@
-import React, {Fragment, useEffect} from "react";
-import {useHistory} from "react-router-dom";
+import React, { Fragment, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import {
     Backdrop,
     Stack,
@@ -8,11 +8,10 @@ import {
     ListItem,
     ListItemText,
     Divider,
-    Snackbar,
-    Alert,
 } from "@mui/material";
-import {Discussion} from "../../models/Discussions";
-
+import { Discussion } from "../../models/Discussions";
+import { Button } from "@eten-lab/ui-kit";
+import { IonChip } from "@ionic/react";
 
 // import { discussionClient } from "./graphql/discussionGraphql";
 // import { GET_DISCUSSIONS_SUMMARY_BY_USER_ID } from "./graphql/discussionQuery";
@@ -21,7 +20,7 @@ interface PropsDiscussionList {
     discussions: Discussion[]
 }
 
-export const DiscussionList: React.FC<PropsDiscussionList> = ({discussions}) => {
+export const DiscussionList: React.FC<PropsDiscussionList> = ({ discussions }) => {
     const history = useHistory();
 
     // const [
@@ -78,13 +77,18 @@ export const DiscussionList: React.FC<PropsDiscussionList> = ({discussions}) => 
     return (
         <List>
             {discussions.map(
-                ({id, user, title,
-                     // table_name,
-                     // row,
-                     // total_posts,
-                 }) => (
+                ({ id, user, title,
+                    // table_name,
+                    // row,
+                    // total_posts,
+                }) => (
                     <Fragment key={id}>
                         <ListItem
+                            secondaryAction={
+                                <IonChip title="New: 5" color={'danger'}>
+                                    New: 5
+                                </IonChip>
+                            }
                             disablePadding
                             onClick={() => {
                                 history.push({
@@ -94,9 +98,10 @@ export const DiscussionList: React.FC<PropsDiscussionList> = ({discussions}) => 
                         >
                             <ListItemText
                                 primary={title}
+                                secondary={`Total discussions: ${10}`}
                             />
                         </ListItem>
-                        <Divider/>
+                        <Divider />
                     </Fragment>
                 )
             )}

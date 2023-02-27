@@ -1,6 +1,6 @@
-import {Redirect, Route} from 'react-router-dom';
-import {IonApp, IonRouterOutlet, setupIonicReact} from '@ionic/react';
-import {IonReactRouter} from '@ionic/react-router';
+import { Redirect, Route } from 'react-router-dom';
+import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 
 /* Core CSS required for Ionic components to work properly */
@@ -21,8 +21,10 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import {AllDiscussion} from "./pages/Discussion/AllDiscussion";
+import './theme/global.css';
+import { AllDiscussion } from "./pages/Discussion/AllDiscussion";
 import { ThemeProvider } from '@eten-lab/ui-kit';
+import DiscussionDetail from './pages/Discussion/DiscussionDetail';
 
 setupIonicReact();
 
@@ -32,21 +34,24 @@ const App: React.FC = () => {
 
     return (
         <ThemeProvider >
-        <IonApp>
-            <IonReactRouter>
-                <IonRouterOutlet>
-                    <Route exact path="/home">
-                        <Home/>
-                    </Route>
-                    <Route path="/discussions">
-                        <AllDiscussion/>
-                    </Route>
-                    <Route exact path="/">
-                        <Redirect to={initialPage}/>
-                    </Route>
-                </IonRouterOutlet>
-            </IonReactRouter>
-        </IonApp>
+            <IonApp>
+                <IonReactRouter>
+                    <IonRouterOutlet>
+                        <Route exact path="/home">
+                            <Home />
+                        </Route>
+                        <Route exact path="/discussions">
+                            <AllDiscussion />
+                        </Route>
+                        <Route path="/discussions/:id">
+                            <DiscussionDetail />
+                        </Route>
+                        <Route exact path="/">
+                            <Redirect to={initialPage} />
+                        </Route>
+                    </IonRouterOutlet>
+                </IonReactRouter>
+            </IonApp>
         </ThemeProvider>
     )
 };

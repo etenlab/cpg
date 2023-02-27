@@ -1,0 +1,9 @@
+ion-item::part(native),
+ion-item {
+  padding: 0px;
+  margin: 0px;
+}
+ion-icon::part(native),
+ion-icon {
+  margin-right: 5px;
+}
