@@ -1,6 +1,6 @@
-import { Repository } from "typeorm";
-import { Node } from "../../models/node/node.entity";
-import { DbService } from "../../services/db.service";
+import { Repository } from 'typeorm';
+import { Node } from '../../models/node/node.entity';
+import { DbService } from '../../services/db.service';
 
 export class NodeRepository {
   repository!: Repository<Node>;

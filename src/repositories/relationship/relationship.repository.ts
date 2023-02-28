@@ -1,7 +1,7 @@
-import { Repository } from "typeorm";
-import { Relationship } from "../../models/relationship/relationship.entity";
-import { Node } from "../../models/node/node.entity";
-import { DbService } from "../../services/db.service";
+import { Repository } from 'typeorm';
+import { Relationship } from '../../models/relationship/relationship.entity';
+import { Node } from '../../models/node/node.entity';
+import { DbService } from '../../services/db.service';
 
 export class RelationshipRepository {
   repository!: Repository<Relationship>;
@@ -13,7 +13,7 @@ export class RelationshipRepository {
   async createRelationship(
     node_1: string,
     node_2: string,
-    type_name: string
+    type_name: string,
   ): Promise<string | undefined> {
     const relationship = await this.repository.save({
       from_node_uuid: node_1,

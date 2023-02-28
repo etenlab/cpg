@@ -1,16 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    readonly id!: number
+  @PrimaryGeneratedColumn()
+  readonly id!: number;
 
-    @Column("varchar")
-    firstName: string | undefined
+  @Column('varchar')
+  firstName: string | undefined;
 
-    @Column("varchar")
-    lastName: string | undefined
+  @Column('varchar')
+  lastName: string | undefined;
 
-    @Column("int")
-    age: number | undefined
+  @Column('int')
+  age: number | undefined;
 }
