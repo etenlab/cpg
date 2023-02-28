@@ -14,6 +14,7 @@ import { DiscussionList } from "../../components/dicussion/DiscussionList";
 import useRepositories from "../../hooks/useRepositories";
 import { Discussion } from "../../models/Discussions";
 import { PlusButton, Toolbar, Typography } from "@eten-lab/ui-kit";
+import "./DiscussionList.css";
 
 const sampleData: Discussion[] = [{ title: 'Discussoin Title #1', text: '', id: 1, user: Object.create(null) }, { title: 'Discussoin Title #2', text: '', id: 2, user: Object.create(null) }]
 

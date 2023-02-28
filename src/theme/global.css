@@ -4,3 +4,20 @@
 .mb-2 {
     margin-bottom: 20px;
 }
+.mr-1 {
+    margin-right: 10px;
+}
+.mr-2{
+    margin-right: 20px;
+}
+.bg-danger {
+    background-color: #E04E4E;
+}
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.flex-row.space-between {
+    justify-content: space-between;
+}

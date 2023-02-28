@@ -10,12 +10,12 @@ import {
     Divider,
 } from "@mui/material";
 import { Discussion } from "../../models/Discussions";
-import { Button } from "@eten-lab/ui-kit";
 import { IonChip } from "@ionic/react";
 
 // import { discussionClient } from "./graphql/discussionGraphql";
 // import { GET_DISCUSSIONS_SUMMARY_BY_USER_ID } from "./graphql/discussionQuery";
 // import { withUserId } from "./withUserId";
+
 interface PropsDiscussionList {
     discussions: Discussion[]
 }
@@ -77,15 +77,11 @@ export const DiscussionList: React.FC<PropsDiscussionList> = ({ discussions }) =
     return (
         <List>
             {discussions.map(
-                ({ id, user, title,
-                    // table_name,
-                    // row,
-                    // total_posts,
-                }) => (
+                ({ id, user, title}) => (
                     <Fragment key={id}>
                         <ListItem
                             secondaryAction={
-                                <IonChip title="New: 5" color={'danger'}>
+                                <IonChip title="New: 5" color={'danger'} className="chip-btn bg-danger">
                                     New: 5
                                 </IonChip>
                             }
