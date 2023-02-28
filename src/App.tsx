@@ -25,6 +25,8 @@ import './theme/global.css';
 import { AllDiscussion } from "./pages/Discussion/AllDiscussion";
 import { ThemeProvider } from '@eten-lab/ui-kit';
 import DiscussionDetail from './pages/Discussion/DiscussionDetail';
+import Notifications from './pages/Notification/Notification';
+import AppRoutes from './constants/AppRoutes';
 
 setupIonicReact();
 
@@ -37,14 +39,17 @@ const App: React.FC = () => {
             <IonApp>
                 <IonReactRouter>
                     <IonRouterOutlet>
-                        <Route exact path="/home">
+                        <Route exact path={AppRoutes.home}>
                             <Home />
                         </Route>
-                        <Route exact path="/discussions">
+                        <Route exact path={AppRoutes.discussions}>
                             <AllDiscussion />
                         </Route>
-                        <Route path="/discussions/:id">
+                        <Route path={AppRoutes.discussionDetail}>
                             <DiscussionDetail />
+                        </Route>
+                        <Route exact path={AppRoutes.notifications}>
+                            <Notifications />
                         </Route>
                         <Route exact path="/">
                             <Redirect to={initialPage} />

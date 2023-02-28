@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router"
 import { Toolbar, Typography, DiscussionBoxUI } from "@eten-lab/ui-kit";
 import { arrowBack } from "ionicons/icons";
 import "./DiscussionDetail.css"
+import AppRoutes from "../../constants/AppRoutes";
 const { ReactionButton, InputButtonGroup, Avatar, Username, DateViewer, DotsMoreButton, AudioPlayer, VideoPlayer, ReactionPlusButton } = DiscussionBoxUI;
 
 interface IProps {
@@ -17,9 +18,9 @@ const DiscussionDetail: React.FC<IProps> = (props) => {
     return (
         <IonPage>
             <IonHeader>
-                <Toolbar title='Showcase' buttons={{ discussion: true, notification: true, menu: true }} onClickMenuBtn={() => { }} onClickDiscussionBtn={() => { }} onClickNotificationBtn={() => { }} />
+                <Toolbar title='Showcase' buttons={{ discussion: true, notification: true, menu: true }} onClickMenuBtn={() => { }} onClickDiscussionBtn={() => { }} onClickNotificationBtn={() => { history.push(AppRoutes.notifications) }} />
             </IonHeader>
-            <IonContent className='ion-padding' style={{ height: 'fit-content' }}>
+            <IonContent className='ion-padding'>
                 <IonItem lines="none">
                     <IonIcon icon={arrowBack} slot="start" onClick={() => {
                         history.goBack();

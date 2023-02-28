@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Discussion } from "../../models/Discussions";
 import { IonChip } from "@ionic/react";
+import AppRoutes from "../../constants/AppRoutes";
 
 // import { discussionClient } from "./graphql/discussionGraphql";
 // import { GET_DISCUSSIONS_SUMMARY_BY_USER_ID } from "./graphql/discussionQuery";
@@ -88,7 +89,7 @@ export const DiscussionList: React.FC<PropsDiscussionList> = ({ discussions }) =
                             disablePadding
                             onClick={() => {
                                 history.push({
-                                    pathname: `/discussions/${id}`,
+                                    pathname: `${AppRoutes.discussions}/${id}`,
                                 });
                             }}
                         >
