@@ -43,7 +43,7 @@ export const AllDiscussion = () => {
                 <Toolbar title='Showcase' buttons={{ discussion: true, notification: true, menu: true }} onClickMenuBtn={() => { }} onClickDiscussionBtn={() => { }} onClickNotificationBtn={() => {history.push(AppRoutes.notifications)}} />
             </IonHeader>
             <IonContent className='ion-padding' style={{ height: 'fit-content' }}>
-                <Typography variant='h2'>Discussions</Typography>
+                <Typography variant='h3'>Discussions</Typography>
                 {
                     discussions?.length
                         ?

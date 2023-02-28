@@ -45,7 +45,7 @@ const App: React.FC = () => {
                         <Route exact path={AppRoutes.discussions}>
                             <AllDiscussion />
                         </Route>
-                        <Route path={AppRoutes.discussionDetail}>
+                        <Route path={`${AppRoutes.discussions}/:id`}>
                             <DiscussionDetail />
                         </Route>
                         <Route exact path={AppRoutes.notifications}>
