@@ -15,5 +15,5 @@ export class NodePropertyValue {
     node_property_key_uuid!: string
 
     @Column("jsonb")
-    property_value!: JSON[]
+    property_value!: any
 }

@@ -21,10 +21,12 @@ export class NodeService {
     this.nodeRepo = new NodeRepository(dbService);
     this.nodePropertyKeyRepo = new NodePropertyKeyRepository(dbService);
     this.nodePropertyValueRepo = new NodePropertyValueRepository(dbService);
+    this.relationshipRepo = new RelationshipRepository(dbService);
+    this.relationshipPropertyKeyRepo = new RelationshipPropertyKeyRepository(dbService);
+    this.relationshipPropertyValueRepo = new RelationshipPropertyValueRepository(dbService);
   }
 
   // Layer 2
-
   async createNodeFromObject(type_name: string, obj: Object): Promise<string> {
     const node_uuid = await this.nodeRepo.createNode(type_name);
     Object.entries(obj).forEach(async ([key, value]) => {
@@ -35,7 +37,11 @@ export class NodeService {
     return node_uuid;
   }
 
-  async createRelationshipFromObject(type_name: string, obj: Object, from_node: string, to_node: string): Promise<string> {
+  async createRelationshipFromObject(type_name: string, obj: Object, from_node: string | undefined, to_node: string | undefined): Promise<string | null> {
+    if (from_node === undefined || to_node === undefined) {
+      return null;
+    }
+
     const relationship = await this.relationshipRepo.createRelationship(from_node, to_node, type_name);
     Object.entries(obj).forEach(async ([key, value]) => {
       const property_key_uuid = await this.relationshipPropertyKeyRepo.createRelationshipPropertyKey(relationship.relationship_uuid, key);
@@ -45,7 +51,7 @@ export class NodeService {
     return relationship.relationship_uuid;
   }
 
-  async createRelatedFromNodeFromObject(node_uuid: string, node_type_name: string, rel_type_name: string, obj: {}) {
+  async createRelatedFromNodeToObject(node_uuid: string, node_type_name: string, rel_type_name: string, obj: {}) {
     const to_node = await this.nodeRepo.readNode(node_uuid);
     if (!to_node) {
       return null;
@@ -103,4 +109,48 @@ export class NodeService {
 
     return rel;
   }
+
+  // Layer 3
+
+  async createTable(name: string): Promise<Table | null> {
+    const node_uuid = await this.createNodeFromObject('table', { name: name });
+    const node:Table | null  = await this.nodeRepo.readNode(node_uuid);
+    return node;
+  }
+
+  async getTable(name: string): Promise<Table | null> {
+    const property_values = await this.nodePropertyValueRepo.repository.find({
+      where: {
+        property_value: name,
+      }
+    });
+    let node: Table | null = null;
+    for (const val of property_values) {
+      const property_key = await this.nodePropertyKeyRepo.repository.findOneBy({ node_uuid: val.node_property_key_uuid });
+      if (property_key) {
+        node = await this.nodeRepo.readNode(property_key.node_uuid);
+      }
+    }
+
+    return node;
+  }
+
+  async addTableData(table_name: string, column_name: string, row_id: string, cell_data: any): Promise<TableCell | null> {
+    const table = await this.getTable(table_name);
+    const table_cell_uuid = await this.createNodeFromObject('table-cell', {
+      column: column_name,
+      row: row_id,
+      data: cell_data,
+    });
+    const table_cell = await this.nodeRepo.readNode(table_cell_uuid);
+    this.createRelationshipFromObject('parent', {}, table?.node_uuid, table_cell_uuid);
+
+    return table_cell;
+  }
+}
+
+export class Table extends Node {
+}
+
+export class TableCell extends Node {
 }
