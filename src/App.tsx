@@ -31,6 +31,7 @@ import LexiconPage from './pages/LexiconPage';
 import KeyTermsPage from './pages/KeyTermsPage';
 import PericopeBoundariesPage from './pages/PericopeBoundariesPage';
 import LanguageProficiencyPage from './pages/LanguageProficiencyPage';
+import AdminPage from './pages/AdminPage';
 
 setupIonicReact();
 
@@ -82,6 +83,9 @@ const App: React.FC = () => {
           </Route>
           <Route exact path="/language-proficiency">
             <LanguageProficiencyPage />
+          </Route>
+          <Route exact path="/admin">
+            <AdminPage />
           </Route>
           <Route exact path="/">
             <Redirect to="/home" />
