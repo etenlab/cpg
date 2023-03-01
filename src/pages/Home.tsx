@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import UserAddForm from '../components/UserAddForm';
 import UserList from '../components/UserList';
@@ -7,41 +7,44 @@ import { User } from '../models/User';
 import './Home.css';
 
 const Home: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const { userRepository } = useRepositories();
-
-  const getUsers = () => {
-    userRepository?.all().then((data) => {
-      setUsers(data);
-    });
-  }
-
-  const addUserHandler = (user: any) => {
-    user.id = undefined;
-    userRepository?.save(user).then(() => {
-      getUsers();
-    });
-  };
-
-  useEffect(() => {
-    getUsers();
-  }, [userRepository]);
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Crowd Peer Graph</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Crowd Peer Graph</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <UserList users={users} />
-        <UserAddForm addUserHandler={addUserHandler} />
+      <IonContent>
+
+        <IonList>
+          <IonItem routerLink="/discussion">
+            <IonLabel>Discussion Page</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/translation">
+            <IonLabel>Translation Development</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/import-functions">
+            <IonLabel>Import Functions</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/import-files">
+            <IonLabel>Import Files</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/graph-viewer">
+            <IonLabel>Graph Viewer</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/dictionary">
+            <IonLabel>Dictionary</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/lexicon">
+            <IonLabel>Lexicon</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/key-terms">
+            <IonLabel>Key Terms</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/pericope-boundaries">
+            <IonLabel>Pericope Boundaries</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/language-proficiency">
+            <IonLabel>Language Proficiency</IonLabel>
+          </IonItem>
+        </IonList>
+
       </IonContent>
     </IonPage>
   );

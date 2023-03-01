@@ -1,5 +1,5 @@
-import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { Link, Redirect, Route, useHistory } from 'react-router-dom';
+import { IonApp, IonContent, IonHeader, IonPage, IonRouterOutlet, IonTitle, IonToolbar, setupIonicReact, useIonRouter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 
@@ -21,22 +21,75 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import DiscussionDevelopmentPage from './pages/DiscussionDevelopmentPage';
+import ImportFilesPage from './pages/ImportFilesPage';
+import ImportFunctionsPage from './pages/ImportFunctionsPage';
+import TranslationPage from './pages/TranslationPage';
+import GraphViewerPage from './pages/GraphViewerPage';
+import DictionaryPage from './pages/DictionaryPage';
+import LexiconPage from './pages/LexiconPage';
+import KeyTermsPage from './pages/KeyTermsPage';
+import PericopeBoundariesPage from './pages/PericopeBoundariesPage';
+import LanguageProficiencyPage from './pages/LanguageProficiencyPage';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/home">
-          <Home />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/home" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
+const App: React.FC = () => {
+  const router = useIonRouter()
+  return <IonApp>
+    <IonHeader>
+      <IonToolbar>
+        <IonTitle
+          onClick={(e) => {
+            e.preventDefault();
+            router.push('/home');
+          }}
+        >Crowd Peer Graph</IonTitle>
+      </IonToolbar>
+    </IonHeader>
+    <IonContent>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path="/home">
+            <Home />
+          </Route>
+          <Route exact path="/discussion">
+            <DiscussionDevelopmentPage />
+          </Route>
+          <Route exact path="/translation">
+            <TranslationPage />
+          </Route>
+          <Route exact path="/import-functions">
+            <ImportFunctionsPage />
+          </Route>
+          <Route exact path="/import-files">
+            <ImportFilesPage />
+          </Route>
+          <Route exact path="/graph-viewer">
+            <GraphViewerPage />
+          </Route>
+          <Route exact path="/dictionary">
+            <DictionaryPage />
+          </Route>
+          <Route exact path="/lexicon">
+            <LexiconPage />
+          </Route>
+          <Route exact path="/key-terms">
+            <KeyTermsPage />
+          </Route>
+          <Route exact path="/pericope-boundaries">
+            <PericopeBoundariesPage />
+          </Route>
+          <Route exact path="/language-proficiency">
+            <LanguageProficiencyPage />
+          </Route>
+          <Route exact path="/">
+            <Redirect to="/home" />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonContent>
   </IonApp>
-);
+};
 
 export default App;
