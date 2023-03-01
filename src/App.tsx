@@ -32,6 +32,7 @@ import KeyTermsPage from './pages/KeyTermsPage';
 import PericopeBoundariesPage from './pages/PericopeBoundariesPage';
 import LanguageProficiencyPage from './pages/LanguageProficiencyPage';
 import AdminPage from './pages/AdminPage';
+import LanguageListsPage from './pages/LanguageListsPage';
 
 setupIonicReact();
 
@@ -56,6 +57,9 @@ const App: React.FC = () => {
           </Route>
           <Route exact path="/discussion">
             <DiscussionDevelopmentPage />
+          </Route>
+          <Route exact path="/language-lists">
+            <LanguageListsPage />
           </Route>
           <Route exact path="/translation">
             <TranslationPage />

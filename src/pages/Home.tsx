@@ -13,7 +13,10 @@ const Home: React.FC = () => {
       <IonContent>
         <IonList>
           <IonItem routerLink="/admin">
-            <IonLabel>Admin Page</IonLabel>
+            <IonLabel>Admin</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/language-lists">
+            <IonLabel>Language Lists</IonLabel>
           </IonItem>
           <IonItem routerLink="/discussion">
             <IonLabel>Discussion Page</IonLabel>
