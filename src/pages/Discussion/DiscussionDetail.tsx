@@ -11,7 +11,7 @@ interface IProps {
 }
 
 
-const DiscussionDetail: React.FC<IProps> = (props) => {
+const DiscussionDetail: React.FC<IProps> = () => {
     const params: { id: string } = useParams()
     const history = useHistory();
 

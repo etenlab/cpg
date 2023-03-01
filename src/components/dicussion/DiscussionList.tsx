@@ -9,7 +9,7 @@ import {
     ListItemText,
     Divider,
 } from "@mui/material";
-import { Discussion } from "../../models/Discussions";
+import { Discussion } from "../../models/Discussion";
 import { IonChip } from "@ionic/react";
 import AppRoutes from "../../constants/AppRoutes";
 
@@ -78,7 +78,7 @@ export const DiscussionList: React.FC<PropsDiscussionList> = ({ discussions }) =
     return (
         <List>
             {discussions.map(
-                ({ id, user, title}) => (
+                ({ id, table_name, row }) => (
                     <Fragment key={id}>
                         <ListItem
                             secondaryAction={
@@ -94,8 +94,8 @@ export const DiscussionList: React.FC<PropsDiscussionList> = ({ discussions }) =
                             }}
                         >
                             <ListItemText
-                                primary={title}
-                                secondary={`Total discussions: ${10}`}
+                                primary={table_name}
+                                secondary={`Total discussions: ${row}`}
                             />
                         </ListItem>
                         <Divider />

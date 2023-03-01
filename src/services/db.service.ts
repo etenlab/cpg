@@ -1,8 +1,12 @@
-import initSqlJs, {Database} from "sql.js";
-import {DataSource, Repository} from "typeorm";
-import {User} from "../models/User";
-import {Discussion} from "../models/Discussions";
-import {Message} from "../models/Message";
+import initSqlJs, { Database } from "sql.js";
+import { DataSource, Repository } from "typeorm";
+import { User } from "../models/User";
+import { Discussion } from "../models/Discussion";
+import { Message } from "../models/Message";
+import { Post } from "../models/Post";
+import { Reaction } from "../models/Reaction";
+import { RelationshipPostFile } from "../models/RelationshipPostFile";
+import { File } from "../models/File";
 
 export class DbService {
     // todo
@@ -46,7 +50,7 @@ export class DbService {
             useLocalForage: true,
             logging: ["error", "query", "schema"],
             synchronize: true,
-            entities: [User, Discussion, Message],
+            entities: [User, Discussion, Post, Reaction, File, RelationshipPostFile, Message],
         });
     }
 

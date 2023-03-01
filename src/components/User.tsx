@@ -9,9 +9,8 @@ const User: React.FC<ContainerProps> = ({ user }) => {
   return (
     <tr>
       <td>{user.id}</td>
-      <td>{user.firstName}</td>
-      <td>{user.lastName}</td>
-      <td>{user.age}</td>
+      <td>{user.first_name}</td>
+      <td>{user.last_name}</td>
     </tr>
   );
 };

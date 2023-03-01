@@ -1,5 +1,5 @@
 import {Repository} from "typeorm";
-import {Discussion} from "../../models/Discussions";
+import {Discussion} from "../../models/Discussion";
 import {DbService} from "../../services/db.service";
 import {User} from "../../models/User";
 
@@ -17,11 +17,11 @@ export class DiscussionRepository {
         discussion = await this.repository.save({...discussion, user: {id: discussionParams.userId}})
         const user = await this.userRepository.findOne({where: {id: discussionParams.userId}})
         if (user) {
-            if(user.discussions){
-                user.discussions.push(discussion)
-            }else {
-                user.discussions = [discussion]
-            }
+            // if(user.discussions){
+            //     user.discussions.push(discussion)
+            // }else {
+            //     user.discussions = [discussion]
+            // }
             await this.userRepository.save(user)
         }
     }
@@ -31,7 +31,7 @@ export class DiscussionRepository {
     }
 
     _deleteALl() {
-        return this.repository.delete({title: '', text: ''})
+        //return this.repository.delete({title: '', text: ''})
     }
 
 }

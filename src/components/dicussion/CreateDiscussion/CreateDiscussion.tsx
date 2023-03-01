@@ -22,7 +22,7 @@ export const CreateDiscussion: React.FC<PropsCreateDiscussion> = ({setIsCreateDi
 
     const onCreate = () => {
         if(formData.title !== '' && formData.text !== '') {
-            discussionRepository?.create({...formData, userId: 1})
+            discussionRepository?.create({...formData, userId: 1} as any)
                 .then(()=>{
                     setIsCreateDiscussionShow(false)
                 })

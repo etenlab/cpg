@@ -1,10 +1,10 @@
-import {Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {User} from "./User";
-import {Discussion} from "./Discussions";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "./User";
+import { Discussion } from "./Discussion";
 
 @Entity()
 export class Message {
-    @PrimaryGeneratedColumn({type: 'integer', name: 'id'})
+    @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
     id!: number;
 
     @Column('text')
@@ -13,11 +13,10 @@ export class Message {
     @Column('integer')
     userId!: number;
 
-    @ManyToOne(() => User, (user) => user.messages)
+    //@ManyToOne(() => User, (user) => user.messages)
     user!: User
 
     @ManyToMany(() => Discussion)
     @JoinTable()
     discussion!: Discussion[]
-
 }

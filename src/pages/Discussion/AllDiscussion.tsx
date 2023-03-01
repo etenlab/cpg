@@ -12,13 +12,13 @@ import {
 import { CreateDiscussion } from "../../components/dicussion/CreateDiscussion/CreateDiscussion";
 import { DiscussionList } from "../../components/dicussion/DiscussionList";
 import useRepositories from "../../hooks/useRepositories";
-import { Discussion } from "../../models/Discussions";
+import { Discussion } from "../../models/Discussion";
 import { PlusButton, Toolbar, Typography } from "@eten-lab/ui-kit";
 import "./DiscussionList.css";
 import { useHistory } from 'react-router';
 import AppRoutes from '../../constants/AppRoutes';
 
-const sampleData: Discussion[] = [{ title: 'Discussoin Title #1', text: '', id: 1, user: Object.create(null) }, { title: 'Discussoin Title #2', text: '', id: 2, user: Object.create(null) }]
+const sampleData: any[] = [{ title: 'Discussoin Title #1', text: '', id: 1, user: Object.create(null) }, { title: 'Discussoin Title #2', text: '', id: 2, user: Object.create(null) }]
 
 export const AllDiscussion = () => {
     // const {discussionRepository} = useRepositories();
@@ -40,7 +40,7 @@ export const AllDiscussion = () => {
     return (
         <IonPage>
             <IonHeader>
-                <Toolbar title='Showcase' buttons={{ discussion: true, notification: true, menu: true }} onClickMenuBtn={() => { }} onClickDiscussionBtn={() => { }} onClickNotificationBtn={() => {history.push(AppRoutes.notifications)}} />
+                <Toolbar title='Showcase' buttons={{ discussion: true, notification: true, menu: true }} onClickMenuBtn={() => { }} onClickDiscussionBtn={() => { }} onClickNotificationBtn={() => { history.push(AppRoutes.notifications) }} />
             </IonHeader>
             <IonContent className='ion-padding' style={{ height: 'fit-content' }}>
                 <Typography variant='h3'>Discussions</Typography>

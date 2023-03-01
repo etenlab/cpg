@@ -1,24 +1,16 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm"
-import {Discussion} from "./Discussions";
-import {Message} from "./Message";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
-@Entity()
+@Entity('users')
 export class User {
-    @PrimaryGeneratedColumn()
-    readonly id!: number
+    @PrimaryGeneratedColumn('increment', { type: 'integer' })
+    id!: number
 
-    @Column("varchar")
-    firstName: string | undefined
+    @Column({ type: 'varchar', unique: true, length: 255 })
+    username!: string;
 
-    @Column("varchar")
-    lastName: string | undefined
+    @Column("varchar", { nullable: true })
+    first_name?: string
 
-    @Column("int")
-    age: number | undefined
-
-    @OneToMany(() => Discussion, (discussion) => discussion.user)
-    discussions!: Discussion[]
-
-    @OneToMany(() => Message, (messages => messages.user))
-    messages!: Message[]
+    @Column("varchar", { nullable: true })
+    last_name?: string
 }
