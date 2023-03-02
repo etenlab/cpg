@@ -13,7 +13,7 @@ export class NodeTypeRepository {
     const node_type = await this.repository.save({
       type_name,
       sync_layer: this.syncService.syncLayer,
-    });
+    } as NodeType);
 
     return node_type.type_name;
   }

@@ -35,10 +35,10 @@ export class SeedService {
         Math.random().toString(36).substring(2, 10),
       );
 
-    await this.relationshipRepository.createRelationship(
-      relationshipType,
+    const relationship = await this.relationshipRepository.createRelationship(
       node1!,
       node2!,
+      relationshipType,
     );
 
     const nodePropKey =
@@ -54,7 +54,7 @@ export class SeedService {
 
     const relationshipPropKey =
       await this.relationshipPropertyKeyRepository.createRelationshipPropertyKey(
-        relationshipType,
+        relationship!,
         Math.random().toString(36).substring(2, 10),
       );
 

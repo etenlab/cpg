@@ -9,7 +9,7 @@ export class RelationshipPropertyKey extends Syncable {
     unique: true,
     type: 'varchar',
   })
-  relationship_property_key_uuid!: string;
+  id!: string;
 
   @Column('varchar')
   property_key!: string;
@@ -17,5 +17,6 @@ export class RelationshipPropertyKey extends Syncable {
   @ManyToOne(() => Relationship)
   relationship!: Relationship;
 
-  relationship_uuid!: string;
+  @Column('varchar')
+  relationship_id!: string;
 }

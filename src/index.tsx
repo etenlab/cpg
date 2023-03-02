@@ -15,10 +15,12 @@ import { RelationshipTypeRepository } from './repositories/relationship/relation
 import { RelationshipPropertyValueRepository } from './repositories/relationship/relationship-property-value.repository';
 import { RelationshipPropertyKeyRepository } from './repositories/relationship/relationship-property-key.repository';
 import { RelationshipRepository } from './repositories/relationship/relationship.repository';
+import { SyncSessionRepository } from './repositories/sync-session.repository';
 
 // singletons
 export const dbService = new DbService();
-export const syncService = new SyncService(dbService);
+export const syncSessionRepository = new SyncSessionRepository(dbService);
+export const syncService = new SyncService(dbService, syncSessionRepository);
 export const nodeRepository = new NodeRepository(dbService, syncService);
 export const nodePropertyKeyRepository = new NodePropertyKeyRepository(
   dbService,

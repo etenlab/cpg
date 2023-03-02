@@ -13,7 +13,7 @@ export class RelationshipTypeRepository {
     const relationship_type = await this.repository.save({
       type_name,
       sync_layer: this.syncService.syncLayer,
-    });
+    } as RelationshipType);
 
     return relationship_type.type_name;
   }

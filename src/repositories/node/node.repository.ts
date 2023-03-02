@@ -14,10 +14,10 @@ export class NodeRepository {
     const node = await this.repository.save({
       node_type: type_name,
       sync_layer: this.syncService.syncLayer,
-      node_uuid: nanoid(),
-    });
+      id: nanoid(),
+    } as Node);
 
-    return node.node_uuid;
+    return node.id;
   }
 
   async listAllNodesByType(type_name: string): Promise<Node[]> {
@@ -27,7 +27,7 @@ export class NodeRepository {
   }
 
   async readNode(node_id: string): Promise<Node | null> {
-    const node = await this.repository.findOneBy({ node_uuid: node_id });
+    const node = await this.repository.findOneBy({ id: node_id });
 
     return node;
   }

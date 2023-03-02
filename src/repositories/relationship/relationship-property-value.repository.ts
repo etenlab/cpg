@@ -15,12 +15,12 @@ export class RelationshipPropertyValueRepository {
     key_value: any,
   ): Promise<string | undefined> {
     const relationship_property_value = await this.repository.save({
-      relationship_property_value_uuid: nanoid(),
-      relationship_property_key_uuid: key_id,
-      property_value: key_value,
+      id: nanoid(),
+      relationship_property_key_id: key_id,
+      property_value: JSON.stringify({ value: key_value }),
       sync_layer: this.syncService.syncLayer,
-    });
+    } as RelationshipPropertyValue);
 
-    return relationship_property_value.relationship_property_value_uuid;
+    return relationship_property_value.id;
   }
 }

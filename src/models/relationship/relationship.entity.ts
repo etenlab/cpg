@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryColumn, ManyToOne, Column } from 'typeorm';
 import { Node } from '../node/node.entity';
 import { RelationshipType } from './relationship-type.entity';
 import { Syncable } from '../Syncable';
@@ -10,18 +10,21 @@ export class Relationship extends Syncable {
     unique: true,
     type: 'varchar',
   })
-  relationship_uuid!: string;
+  id!: string;
 
   @ManyToOne(() => RelationshipType)
+  @Column('varchar')
   relationship_type!: string;
 
   @ManyToOne(() => Node)
   from_node!: Node;
 
-  from_node_uuid!: string;
+  @Column('varchar')
+  from_node_id!: string;
 
   @ManyToOne(() => Node)
   to_node!: Node;
 
-  to_node_uuid!: string;
+  @Column('varchar')
+  to_node_id!: string;
 }

@@ -8,11 +8,13 @@ import {
 } from '@ionic/react';
 import { useCallback } from 'react';
 import useSeedService from '../hooks/useSeedService';
+import useSyncService from '../hooks/useSyncService';
 
 import './Home.css';
 
 const Seed: React.FC = () => {
   const seedService = useSeedService();
+  const syncService = useSyncService();
 
   const doSeed = useCallback(() => {
     if (!seedService) {
@@ -23,15 +25,25 @@ const Seed: React.FC = () => {
     seedService.createNodesAndRelationship();
   }, [seedService]);
 
+  const doSync = useCallback(() => {
+    if (!syncService) {
+      console.warn(`Sync service is not initialized`);
+      return;
+    }
+
+    syncService.sync();
+  }, [syncService]);
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Seed Database</IonTitle>
+          <IonTitle>Sync Tools</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonButton onClick={doSeed}>Seed Database</IonButton>
+        <IonButton onClick={doSync}>Sync</IonButton>
       </IonContent>
     </IonPage>
   );

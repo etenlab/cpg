@@ -5,10 +5,10 @@ export class SyncSession {
   @PrimaryGeneratedColumn({ type: 'int', name: 'sync_session' })
   id!: number;
 
-  @Column('number')
+  @Column('int')
   syncFrom!: number;
 
-  @Column('number')
+  @Column('int')
   syncTo!: number;
 
   @Column('datetime')
@@ -17,6 +17,6 @@ export class SyncSession {
   @Column('boolean')
   completed!: boolean;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   error?: string;
 }

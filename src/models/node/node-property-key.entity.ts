@@ -9,12 +9,13 @@ export class NodePropertyKey extends Syncable {
     unique: true,
     type: 'varchar',
   })
-  node_property_key_uuid!: string;
+  id!: string;
 
   @ManyToOne(() => Node)
   node!: Node;
 
-  node_uuid!: string;
+  @Column('varchar')
+  node_id!: string;
 
   @Column('varchar')
   property_key!: string;

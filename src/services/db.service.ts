@@ -8,6 +8,7 @@ import { RelationshipPropertyKey } from '../models/relationship/relationship-pro
 import { RelationshipPropertyValue } from '../models/relationship/relationship-property-value.entity';
 import { RelationshipType } from '../models/relationship/relationship-type.entity';
 import { Relationship } from '../models/relationship/relationship.entity';
+import { SyncSession } from '../models/Sync';
 import { User } from '../models/User';
 
 export class DbService {
@@ -53,6 +54,7 @@ export class DbService {
       logging: ['error', 'query', 'schema'],
       synchronize: true,
       entities: [
+        SyncSession,
         User,
         Node,
         NodeType,

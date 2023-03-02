@@ -15,12 +15,12 @@ export class NodePropertyKeyRepository {
     key_name: string,
   ): Promise<string | undefined> {
     const node_property_key = await this.repository.save({
-      node_property_key_uuid: nanoid(),
-      node_uuid: node_id,
+      id: nanoid(),
+      node_id: node_id,
       property_key: key_name,
       sync_layer: this.syncService.syncLayer,
-    });
+    } as NodePropertyKey);
 
-    return node_property_key.node_property_key_uuid;
+    return node_property_key.id;
   }
 }

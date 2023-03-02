@@ -8,7 +8,7 @@ export class Node extends Syncable {
     unique: true,
     type: 'varchar',
   })
-  node_uuid!: string;
+  id!: string;
 
   @Column('varchar')
   node_type!: string;

@@ -9,13 +9,14 @@ export class RelationshipPropertyValue extends Syncable {
     unique: true,
     type: 'varchar',
   })
-  relationship_property_value_uuid!: string;
+  id!: string;
 
   @Column('varchar')
-  property_value!: JSON[];
+  property_value!: string;
 
   @ManyToOne(() => RelationshipPropertyKey)
   relationship_property_key!: RelationshipPropertyKey;
 
-  relationship_property_key_uuid!: string;
+  @Column('varchar')
+  relationship_property_key_id!: string;
 }
