@@ -1,13 +1,13 @@
-import { Repository } from 'typeorm';
 import { Relationship } from '../../models/relationship/relationship.entity';
-import { Node } from '../../models/node/node.entity';
 import { DbService } from '../../services/db.service';
+import { SyncService } from '../../services/sync.service';
+import { nanoid } from 'nanoid';
 
 export class RelationshipRepository {
-  repository!: Repository<Relationship>;
+  constructor(private dbService: DbService, private syncService: SyncService) {}
 
-  constructor(private dbService: DbService) {
-    this.repository = this.dbService.dataSource.getRepository(Relationship);
+  private get repository() {
+    return this.dbService.dataSource.getRepository(Relationship);
   }
 
   async createRelationship(
@@ -16,9 +16,11 @@ export class RelationshipRepository {
     type_name: string,
   ): Promise<string | undefined> {
     const relationship = await this.repository.save({
+      relationship_uuid: nanoid(),
       from_node_uuid: node_1,
       to_node_uuid: node_2,
       relationship_type: type_name,
+      sync_layer: this.syncService.syncLayer,
     });
 
     return relationship.relationship_uuid;

@@ -1,5 +1,13 @@
-import initSqlJs, { Database } from 'sql.js';
+import initSqlJs from 'sql.js';
 import { DataSource, Repository } from 'typeorm';
+import { NodePropertyKey } from '../models/node/node-property-key.entity';
+import { NodePropertyValue } from '../models/node/node-property-value.entity';
+import { NodeType } from '../models/node/node-type.entity';
+import { Node } from '../models/node/node.entity';
+import { RelationshipPropertyKey } from '../models/relationship/relationship-property-key.entity';
+import { RelationshipPropertyValue } from '../models/relationship/relationship-property-value.entity';
+import { RelationshipType } from '../models/relationship/relationship-type.entity';
+import { Relationship } from '../models/relationship/relationship.entity';
 import { User } from '../models/User';
 
 export class DbService {
@@ -44,7 +52,17 @@ export class DbService {
       useLocalForage: true,
       logging: ['error', 'query', 'schema'],
       synchronize: true,
-      entities: [User],
+      entities: [
+        User,
+        Node,
+        NodeType,
+        NodePropertyKey,
+        NodePropertyValue,
+        Relationship,
+        RelationshipPropertyKey,
+        RelationshipPropertyValue,
+        RelationshipType,
+      ],
     });
   }
 

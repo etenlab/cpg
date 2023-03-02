@@ -1,14 +1,13 @@
-import { Repository } from 'typeorm';
+import { nanoid } from 'nanoid';
 import { RelationshipPropertyValue } from '../../models/relationship/relationship-property-value.entity';
 import { DbService } from '../../services/db.service';
+import { SyncService } from '../../services/sync.service';
 
 export class RelationshipPropertyValueRepository {
-  repository!: Repository<RelationshipPropertyValue>;
+  constructor(private dbService: DbService, private syncService: SyncService) {}
 
-  constructor(private dbService: DbService) {
-    this.repository = this.dbService.dataSource.getRepository(
-      RelationshipPropertyValue,
-    );
+  private get repository() {
+    return this.dbService.dataSource.getRepository(RelationshipPropertyValue);
   }
 
   async createRelationshipPropertyValue(
@@ -16,8 +15,10 @@ export class RelationshipPropertyValueRepository {
     key_value: any,
   ): Promise<string | undefined> {
     const relationship_property_value = await this.repository.save({
+      relationship_property_value_uuid: nanoid(),
       relationship_property_key_uuid: key_id,
       property_value: key_value,
+      sync_layer: this.syncService.syncLayer,
     });
 
     return relationship_property_value.relationship_property_value_uuid;

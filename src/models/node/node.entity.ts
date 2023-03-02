@@ -1,16 +1,15 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, RelationId } from 'typeorm';
-import { nanoid } from 'nanoid';
-import { NodeType } from './node-type.entity';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Syncable } from '../Syncable';
 
 @Entity()
-export class Node {
-  @PrimaryColumn({ length: 21, unique: true, default: () => nanoid() })
+export class Node extends Syncable {
+  @PrimaryColumn({
+    length: 21,
+    unique: true,
+    type: 'varchar',
+  })
   node_uuid!: string;
 
-  @Column('null')
-  readonly node_id: number | undefined;
-
-  @ManyToOne(() => NodeType)
-  @RelationId((node_type: NodeType) => node_type.type_name)
+  @Column('varchar')
   node_type!: string;
 }

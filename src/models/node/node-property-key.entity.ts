@@ -1,27 +1,19 @@
-import {
-  Entity,
-  Column,
-  PrimaryColumn,
-  ManyToOne,
-  Index,
-  RelationId,
-} from 'typeorm';
-import { nanoid } from 'nanoid';
+import { Entity, Column, PrimaryColumn, ManyToOne } from 'typeorm';
+import { Syncable } from '../Syncable';
 import { Node } from './node.entity';
 
 @Entity()
-export class NodePropertyKey {
-  @PrimaryColumn({ length: 21, unique: true, default: () => nanoid() })
+export class NodePropertyKey extends Syncable {
+  @PrimaryColumn({
+    length: 21,
+    unique: true,
+    type: 'varchar',
+  })
   node_property_key_uuid!: string;
-
-  @Column('null')
-  readonly node_property_key_id: number | undefined;
 
   @ManyToOne(() => Node)
   node!: Node;
 
-  @Index('idx_node_property_keys_node_uuid_key')
-  @RelationId((node: Node) => node.node_uuid)
   node_uuid!: string;
 
   @Column('varchar')
