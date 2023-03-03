@@ -25,13 +25,22 @@ const Dev: React.FC = () => {
     seedService.createNodesAndRelationship();
   }, [seedService]);
 
-  const doSync = useCallback(() => {
+  const doSyncOut = useCallback(() => {
     if (!syncService) {
       console.warn(`Sync service is not initialized`);
       return;
     }
 
-    syncService.sync();
+    syncService.syncOut();
+  }, [syncService]);
+
+  const doSyncIn = useCallback(() => {
+    if (!syncService) {
+      console.warn(`Sync service is not initialized`);
+      return;
+    }
+
+    syncService.syncIn();
   }, [syncService]);
 
   return (
@@ -43,7 +52,8 @@ const Dev: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen>
         <IonButton onClick={doSeed}>Seed Database</IonButton>
-        <IonButton onClick={doSync}>Sync</IonButton>
+        <IonButton onClick={doSyncOut}>Sync Out</IonButton>
+        <IonButton onClick={doSyncIn}>Sync In</IonButton>
       </IonContent>
     </IonPage>
   );

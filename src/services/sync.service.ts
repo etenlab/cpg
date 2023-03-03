@@ -20,7 +20,7 @@ const syncTables: SyncTable[] = [
   {
     entity: Node,
     tableName: 'node',
-    pk: 'node_uuid',
+    pk: 'id',
   },
   {
     entity: NodeType,
@@ -30,17 +30,17 @@ const syncTables: SyncTable[] = [
   {
     entity: NodePropertyKey,
     tableName: 'node_property_key',
-    pk: 'node_property_key_uuid',
+    pk: 'id',
   },
   {
     entity: NodePropertyValue,
     tableName: 'node_property_value',
-    pk: 'node_property_value_uuid',
+    pk: 'id',
   },
   {
     entity: Relationship,
     tableName: 'relationship',
-    pk: 'relationship_uuid',
+    pk: 'id',
   },
   {
     entity: RelationshipType,
@@ -50,12 +50,12 @@ const syncTables: SyncTable[] = [
   {
     entity: RelationshipPropertyKey,
     tableName: 'relationship_property_key',
-    pk: 'relationship_property_key_uuid',
+    pk: 'id',
   },
   {
     entity: RelationshipPropertyValue,
     tableName: 'relationship_property_value',
-    pk: 'relationship_property_value_uuid',
+    pk: 'id',
   },
 ];
 
@@ -66,6 +66,7 @@ type SyncEntry = {
 
 const CURRENT_SYNC_LAYER_KEY = 'syncLayer';
 const LAST_SYNC_LAYER_KEY = 'lastSyncLayer';
+const LAST_SYNC_FROM_SERVER_KEY = 'lastSyncFromServer';
 export class SyncService {
   private currentSyncLayer: number;
   private lastLayerSync: number;
@@ -83,14 +84,16 @@ export class SyncService {
       throw new Error('REACT_APP_CPG_SERVER_URL not set');
     this.serverUrl = process.env.REACT_APP_CPG_SERVER_URL;
 
-    this.lastLayerSync = Number(localStorage.getItem('lastSync') || '-1');
+    this.lastLayerSync = Number(
+      localStorage.getItem(CURRENT_SYNC_LAYER_KEY) || '-1',
+    );
   }
 
   get syncLayer() {
     return this.currentSyncLayer;
   }
 
-  incrementSyncCounter() {
+  private incrementSyncCounter() {
     this.currentSyncLayer++;
 
     console.log(`currentSyncLayer = ${this.currentSyncLayer}`);
@@ -98,15 +101,23 @@ export class SyncService {
     localStorage.setItem(CURRENT_SYNC_LAYER_KEY, String(this.currentSyncLayer));
   }
 
-  setLastSync(value: number) {
+  private setLastSyncLayer(value: number) {
     this.lastLayerSync = value;
 
-    console.log(`lastLayerSync = ${this.lastLayerSync}`);
+    console.log(`lastLayerSyncLayer = ${this.lastLayerSync}`);
 
     localStorage.setItem(LAST_SYNC_LAYER_KEY, String(this.lastLayerSync));
   }
 
-  async sync() {
+  private setLastSyncFromServerTime(isoString: string) {
+    localStorage.setItem(LAST_SYNC_FROM_SERVER_KEY, isoString);
+  }
+
+  private getLastSyncFromServerTime() {
+    return localStorage.getItem(LAST_SYNC_FROM_SERVER_KEY);
+  }
+
+  async syncOut() {
     const toSyncLayer = this.currentSyncLayer;
     const fromSyncLayer = this.lastLayerSync + 1;
     console.log(`Sync: from ${fromSyncLayer} to ${toSyncLayer}`);
@@ -140,7 +151,7 @@ export class SyncService {
     }
 
     if (!syncData.length) {
-      console.log(`Nothing to sync`);
+      console.log(`Nothing to sync out`);
       return null;
     }
 
@@ -150,7 +161,7 @@ export class SyncService {
     );
 
     try {
-      await this.syncWithServer(syncData);
+      await this.syncToServer(syncData);
     } catch (err) {
       await this.syncSessionRepository.completeSyncSession(
         sessionId,
@@ -161,16 +172,25 @@ export class SyncService {
 
     await this.syncSessionRepository.completeSyncSession(sessionId);
 
-    this.setLastSync(toSyncLayer);
+    console.log(
+      `Sync completed successfully (${
+        syncData.length
+      } tables, ${syncData.reduce(
+        (sum, c) => sum + c.rows.length,
+        0,
+      )} entries)`,
+    );
+
+    this.setLastSyncLayer(toSyncLayer);
 
     return syncData;
   }
 
-  private async syncWithServer(entries: SyncEntry[]) {
+  private async syncToServer(entries: SyncEntry[]) {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    console.log('Starting sync...');
+    console.log('Starting sync out...');
 
     try {
       const response = await axios.post(
@@ -179,13 +199,112 @@ export class SyncService {
         {},
       );
 
-      console.log('Starting completed...');
-
       return response.data;
     } catch (err) {
       console.log('Sync failed');
 
       throw err;
     }
+  }
+
+  async syncIn() {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    console.log('Starting sync in...');
+
+    const lastSyncParam = this.getLastSyncFromServerTime();
+
+    try {
+      const params = {} as any;
+
+      if (lastSyncParam) {
+        params['last-sync'] = lastSyncParam;
+        console.log(`Doing sync from ${lastSyncParam}`);
+      } else {
+        console.log(`Doing first sync`);
+      }
+
+      const response = await axios.get(`${this.serverUrl}/sync/from-server`, {
+        params,
+      });
+
+      const data = response.data as { lastSync: string; entries: SyncEntry[] };
+
+      const lastSync = data.lastSync;
+      const entries = data.entries;
+
+      if (!entries.length) {
+        console.log('No new sync entries from server');
+        return null;
+      }
+
+      await this.saveSyncEntries(entries);
+
+      this.setLastSyncFromServerTime(lastSync);
+    } catch (err) {
+      console.log('Sync failed');
+
+      throw err;
+    }
+  }
+
+  private async saveSyncEntries(entries: SyncEntry[]) {
+    if (entries.length < 1) {
+      console.log(`Nothing to sync in`);
+    } else {
+      console.log('Saving sync entries...');
+    }
+
+    for (const entry of entries) {
+      const table = entry.table;
+      const rows = entry.rows;
+
+      const syncTable = syncTables.find((t) => t.tableName === table);
+
+      if (!syncTable) {
+        throw new Error(`Unknown table ${table}`);
+      }
+
+      const entity = syncTable.entity;
+      const pk = syncTable.pk;
+
+      for (const row of rows) {
+        const pkValue = row[pk];
+
+        // TODO: implement upsertcout
+
+        const existing = await this.dbService.dataSource
+          .getRepository(entity)
+          .createQueryBuilder()
+          .select('*')
+          .where(`${pk} = :pkValue`, {
+            pkValue,
+          })
+          .execute();
+
+        if (existing.length) {
+          await this.dbService.dataSource
+            .getRepository(entity)
+            .createQueryBuilder()
+            .update(entity)
+            .set(row)
+            .where(`${pk} = :pkValue`, {
+              pkValue,
+            })
+            .execute();
+        } else {
+          await this.dbService.dataSource
+            .getRepository(entity)
+            .createQueryBuilder()
+            .insert()
+            .into(entity)
+            .values(row)
+            .execute();
+        }
+      }
+    }
+
+    console.log(`Sync entries saved`);
   }
 }
