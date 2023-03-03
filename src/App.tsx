@@ -21,7 +21,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import Seed from './pages/Seed';
+import Dev from './pages/Seed';
 
 setupIonicReact();
 
@@ -32,8 +32,8 @@ const App: React.FC = () => (
         <Route exact path="/home">
           <Home />
         </Route>
-        <Route exact path="/seed">
-          <Seed />
+        <Route exact path="/dev">
+          <Dev />
         </Route>
         <Route exact path="/">
           <Redirect to="/home" />

@@ -12,7 +12,7 @@ import useSyncService from '../hooks/useSyncService';
 
 import './Home.css';
 
-const Seed: React.FC = () => {
+const Dev: React.FC = () => {
   const seedService = useSeedService();
   const syncService = useSyncService();
 
@@ -49,4 +49,4 @@ const Seed: React.FC = () => {
   );
 };
 
-export default Seed;
+export default Dev;
