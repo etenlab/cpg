@@ -1,19 +1,42 @@
-import { Entity, Column, PrimaryColumn, Index, RelationId, OneToOne } from "typeorm"
-import { nanoid } from "nanoid"
-import { NodePropertyKey } from "./node-property-key.entity"
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  Index,
+  OneToOne,
+  JoinColumn,
+  BeforeInsert,
+} from "typeorm";
+import { nanoid } from "nanoid";
+import { NodePropertyKey } from "./node-property-key.entity";
 
 @Entity()
 export class NodePropertyValue {
-    @PrimaryColumn({ length: 21, unique: true, default: () => nanoid()})
-    node_property_value_uuid!: string
+  @PrimaryColumn("uuid", { type: "varchar", length: 21 })
+  node_property_value_uuid!: string;
 
-    @Column("null")
-    readonly node_property_value_id: number | undefined
+  @BeforeInsert()
+  setId() {
+    this.node_property_value_uuid = nanoid();
+  }
 
-    @Index("idx_node_property_values_key_uuid")
-    @RelationId((node_property_key: NodePropertyKey) => node_property_key.node_property_key_uuid)
-    node_property_key_uuid!: string
+  @Column("text", { nullable: true })
+  readonly node_property_value_id!: string | null;
 
-    @Column("jsonb")
-    property_value!: any
+  @Column("varchar")
+  property_value!: any;
+
+  @OneToOne(
+    () => NodePropertyKey,
+    (nodePropertyKey) => nodePropertyKey.property_value
+  )
+  @JoinColumn({
+    name: "node_property_key_uuid",
+    referencedColumnName: "node_property_key_uuid",
+  })
+  property_key!: NodePropertyKey;
+
+  // @Index("idx_node_property_values_key_uuid")
+  // @RelationId((node_property_key: NodePropertyKey) => node_property_key.node_property_key_uuid)
+  // node_property_key_uuid!: string
 }

@@ -7,6 +7,7 @@ import { RelationshipRepository } from "../repositories/relationship/relationshi
 import { DbService } from "./db.service";
 import { Node } from "../models/node/node.entity";
 import { Relationship } from "../models/relationship/relationship.entity";
+import { tableNodeToTable } from "../utils/table";
 
 export class NodeService {
   nodeRepo!: NodeRepository;
@@ -22,61 +23,115 @@ export class NodeService {
     this.nodePropertyKeyRepo = new NodePropertyKeyRepository(dbService);
     this.nodePropertyValueRepo = new NodePropertyValueRepository(dbService);
     this.relationshipRepo = new RelationshipRepository(dbService);
-    this.relationshipPropertyKeyRepo = new RelationshipPropertyKeyRepository(dbService);
-    this.relationshipPropertyValueRepo = new RelationshipPropertyValueRepository(dbService);
+    this.relationshipPropertyKeyRepo = new RelationshipPropertyKeyRepository(
+      dbService
+    );
+    this.relationshipPropertyValueRepo =
+      new RelationshipPropertyValueRepository(dbService);
   }
 
   // Layer 2
-  async createNodeFromObject(type_name: string, obj: Object): Promise<string> {
-    const node_uuid = await this.nodeRepo.createNode(type_name);
+  async createNodeFromObject(type_name: string, obj: Object): Promise<Node> {
+    const node = await this.nodeRepo.createNode(type_name);
     Object.entries(obj).forEach(async ([key, value]) => {
-      const property_key_uuid = await this.nodePropertyKeyRepo.createNodePropertyKey(node_uuid, key);
-      await this.nodePropertyValueRepo.createNodePropertyValue(property_key_uuid, value);
+      const property_key_uuid =
+        await this.nodePropertyKeyRepo.createNodePropertyKey(
+          node.node_uuid,
+          key
+        );
+      if (property_key_uuid) {
+        await this.nodePropertyValueRepo.createNodePropertyValue(
+          property_key_uuid,
+          value
+        );
+      }
     });
 
-    return node_uuid;
+    return node;
   }
 
-  async createRelationshipFromObject(type_name: string, obj: Object, from_node: string | undefined, to_node: string | undefined): Promise<string | null> {
+  async createRelationshipFromObject(
+    type_name: string,
+    obj: Object,
+    from_node: string | undefined,
+    to_node: string | undefined
+  ): Promise<string | null> {
     if (from_node === undefined || to_node === undefined) {
       return null;
     }
+    try {
+      const relationship = await this.relationshipRepo.createRelationship(
+        from_node,
+        to_node,
+        type_name
+      );
+      if (!relationship) {
+        return null;
+      }
 
-    const relationship = await this.relationshipRepo.createRelationship(from_node, to_node, type_name);
-    Object.entries(obj).forEach(async ([key, value]) => {
-      const property_key_uuid = await this.relationshipPropertyKeyRepo.createRelationshipPropertyKey(relationship.relationship_uuid, key);
-      await this.relationshipPropertyValueRepo.createRelationshipPropertyValue(property_key_uuid, value);
-    });
+      Object.entries(obj).forEach(async ([key, value]) => {
+        const property_key_uuid =
+          await this.relationshipPropertyKeyRepo.createRelationshipPropertyKey(
+            relationship.relationship_uuid,
+            key
+          );
+        if (property_key_uuid) {
+          await this.relationshipPropertyValueRepo.createRelationshipPropertyValue(
+            property_key_uuid,
+            value
+          );
+        }
+      });
 
-    return relationship.relationship_uuid;
+      return relationship.relationship_uuid;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   }
 
-  async createRelatedFromNodeToObject(node_uuid: string, node_type_name: string, rel_type_name: string, obj: {}) {
+  async createRelatedFromNodeToObject(
+    node_uuid: string,
+    node_type_name: string,
+    rel_type_name: string,
+    obj: {}
+  ) {
     const to_node = await this.nodeRepo.readNode(node_uuid);
     if (!to_node) {
       return null;
     }
 
-    const from_node_uuid = await this.createNodeFromObject(node_type_name, obj);
-    const relationship = await this.relationshipRepo.createRelationship(from_node_uuid, node_uuid, rel_type_name);
+    const from_node = await this.createNodeFromObject(node_type_name, obj);
+    const relationship = await this.relationshipRepo.createRelationship(
+      from_node.node_uuid,
+      node_uuid,
+      rel_type_name
+    );
 
-    const from_node = await this.nodeRepo.readNode(from_node_uuid);
     return {
       relationship: relationship,
       node: from_node,
     };
   }
 
-  async createRelatedToNodeFromObject(node_uuid: string, node_type_name: string, rel_type_name: string, obj: {}) {
+  async createRelatedToNodeFromObject(
+    node_uuid: string,
+    node_type_name: string,
+    rel_type_name: string,
+    obj: {}
+  ) {
     const from_node = await this.nodeRepo.readNode(node_uuid);
     if (!from_node) {
       return null;
     }
 
-    const to_node_uuid = await this.createNodeFromObject(node_type_name, obj);
-    const relationship = await this.relationshipRepo.createRelationship(node_uuid, to_node_uuid, rel_type_name);
+    const to_node = await this.createNodeFromObject(node_type_name, obj);
+    const relationship = await this.relationshipRepo.createRelationship(
+      node_uuid,
+      to_node.node_uuid,
+      rel_type_name
+    );
 
-    const to_node = await this.nodeRepo.readNode(to_node_uuid);
     return {
       relationship: relationship,
       node: to_node,
@@ -84,73 +139,151 @@ export class NodeService {
   }
 
   async upsertNodeObject(node_uuid: string, obj: Object): Promise<Node | null> {
-    const node = await this.nodeRepo.readNode(node_uuid);
-    if (!node) {
+    try {
+      const node = await this.nodeRepo.readNode(node_uuid);
+      if (!node) {
+        return null;
+      }
+
+      Object.entries(obj).forEach(async ([key, value]) => {
+        const property_key_uuid =
+          await this.nodePropertyKeyRepo.createNodePropertyKey(
+            node.node_uuid,
+            key
+          );
+        if (property_key_uuid) {
+          await this.nodePropertyValueRepo.createNodePropertyValue(
+            property_key_uuid,
+            value
+          );
+        }
+      });
+
+      return node;
+    } catch (err) {
+      console.log(err);
       return null;
     }
-
-    Object.entries(obj).forEach(async ([key, value]) => {
-      const property_key_uuid = await this.nodePropertyKeyRepo.createNodePropertyKey(node.node_uuid, key);
-      await this.nodePropertyValueRepo.createNodePropertyValue(property_key_uuid, value);
-    });
-
-    return node;
   }
 
-  async upsertRelationshipObject(rel_uuid: string, obj: Object): Promise<Relationship | null> {
-    const rel = await this.relationshipRepo.readRelationship(rel_uuid);
-    if (!rel) {
+  async upsertRelationshipObject(
+    rel_uuid: string,
+    obj: Object
+  ): Promise<Relationship | null> {
+    try {
+      const rel = await this.relationshipRepo.readRelationship(rel_uuid);
+      if (!rel) {
+        return null;
+      }
+      Object.entries(obj).forEach(async ([key, value]) => {
+        const property_key_uuid =
+          await this.relationshipPropertyKeyRepo.createRelationshipPropertyKey(
+            rel.relationship_uuid,
+            key
+          );
+        if (property_key_uuid) {
+          await this.relationshipPropertyValueRepo.createRelationshipPropertyValue(
+            property_key_uuid,
+            value
+          );
+        }
+      });
+
+      return rel;
+    } catch (err) {
+      console.log(err);
       return null;
     }
-    Object.entries(obj).forEach(async ([key, value]) => {
-      const property_key_uuid = await this.relationshipPropertyKeyRepo.createRelationshipPropertyKey(rel.relationship_uuid, key);
-      await this.relationshipPropertyValueRepo.createRelationshipPropertyValue(property_key_uuid, value);
-    });
-
-    return rel;
   }
 
   // Layer 3
 
   async createTable(name: string): Promise<Table | null> {
-    const node_uuid = await this.createNodeFromObject('table', { name: name });
-    const node:Table | null  = await this.nodeRepo.readNode(node_uuid);
-    return node;
+    try {
+      const table = await this.createNodeFromObject("table", {
+        name: name,
+      });
+
+      if (!table) {
+        return null;
+      }
+
+      return tableNodeToTable(table);
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   }
 
   async getTable(name: string): Promise<Table | null> {
-    const property_values = await this.nodePropertyValueRepo.repository.find({
-      where: {
-        property_value: name,
+    try {
+      const table: Node | null = await this.nodeRepo.repository.findOne({
+        relations: [
+          "nodeType",
+          "property_keys",
+          "property_keys.property_value",
+          "node_relationships",
+          "node_relationships.toNode",
+          "node_relationships.toNode.property_keys",
+          "node_relationships.toNode.property_keys.property_value",
+        ],
+        select: {
+          node_relationships: true,
+        },
+        where: {
+          nodeType: {
+            type_name: "table",
+          },
+          property_keys: {
+            property_key: "name",
+            property_value: {
+              property_value: name,
+            },
+          },
+        },
+      });
+      if (!table) {
+        return null;
       }
-    });
-    let node: Table | null = null;
-    for (const val of property_values) {
-      const property_key = await this.nodePropertyKeyRepo.repository.findOneBy({ node_uuid: val.node_property_key_uuid });
-      if (property_key) {
-        node = await this.nodeRepo.readNode(property_key.node_uuid);
-      }
+      return tableNodeToTable(table);
+    } catch (err) {
+      console.log(err);
+      return null;
     }
-
-    return node;
   }
 
-  async addTableData(table_name: string, column_name: string, row_id: string, cell_data: any): Promise<TableCell | null> {
-    const table = await this.getTable(table_name);
-    const table_cell_uuid = await this.createNodeFromObject('table-cell', {
-      column: column_name,
-      row: row_id,
-      data: cell_data,
-    });
-    const table_cell = await this.nodeRepo.readNode(table_cell_uuid);
-    this.createRelationshipFromObject('parent', {}, table?.node_uuid, table_cell_uuid);
+  async addTableData(
+    table_name: string,
+    column_name: string,
+    row_id: string,
+    cell_data: any
+  ): Promise<TableCell | null> {
+    try {
+      const table = await this.getTable(table_name);
+      const table_cell = await this.createNodeFromObject("table-cell", {
+        column: column_name,
+        row: row_id,
+        data: cell_data,
+      });
 
-    return table_cell;
+      await this.createRelationshipFromObject(
+        "table-to-table-cell",
+        {},
+        table?.node_uuid,
+        table_cell.node_uuid
+      );
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const new_cell: TableCell = {};
+      table_cell?.property_keys.forEach((key) => {
+        (new_cell as any)[key.property_key] = key.property_value.property_value;
+      });
+
+      return new_cell;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   }
-}
-
-export class Table extends Node {
-}
-
-export class TableCell extends Node {
 }
