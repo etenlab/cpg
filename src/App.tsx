@@ -1,7 +1,7 @@
-import { Link, Redirect, Route, useHistory } from 'react-router-dom';
-import { IonApp, IonContent, IonHeader, IonPage, IonRouterOutlet, IonTitle, IonToolbar, setupIonicReact, useIonRouter } from '@ionic/react';
+import { Redirect, Route } from 'react-router-dom';
+import { IonApp, IonContent, IonHeader, IonRouterOutlet, IonTitle, IonToolbar, setupIonicReact, useIonRouter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home';
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -28,11 +28,12 @@ import TranslationPage from './pages/TranslationPage';
 import GraphViewerPage from './pages/GraphViewerPage';
 import DictionaryPage from './pages/DictionaryPage';
 import LexiconPage from './pages/LexiconPage';
-import KeyTermsPage from './pages/KeyTermsPage';
 import PericopeBoundariesPage from './pages/PericopeBoundariesPage';
 import LanguageProficiencyPage from './pages/LanguageProficiencyPage';
 import AdminPage from './pages/AdminPage';
 import LanguageListsPage from './pages/LanguageListsPage';
+import Home from './pages/Home';
+import KeyTermsPage from './pages/key-terms/KeyTermsPage';
 
 setupIonicReact();
 

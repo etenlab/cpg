@@ -1,0 +1,39 @@
+ion-toolbar {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+ion-header h6 {
+  font-weight: 700 !important;
+}
+.full-width {
+    width: 100% !important; 
+}
+.bordered-form-field {
+  border: 1px solid #c2cbd7;
+  border-radius: 5px;
+  padding-left: 10px;
+}
+.bordered-form-field input {
+  padding-left: 10px;
+}
+.form-control-rows ion-item {
+  margin-bottom: 15px;
+}
+.no-margin {
+  margin: 0px !important;
+}
+.phrase-box {
+  border: 1px solid #c2cbd7;
+  padding: 5px 3px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+.mr-1 {
+  margin-right: 5px;
+}
+.def-item {
+    margin-bottom: 5px;
+}
+.dot {
+    margin-right: 5px;
+}
