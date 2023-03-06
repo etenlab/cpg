@@ -1,13 +1,7 @@
-import { IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { useEffect, useState } from 'react';
-import UserAddForm from '../components/UserAddForm';
-import UserList from '../components/UserList';
-import useRepositories from '../hooks/useRepositories';
-import { User } from '../models/User';
-import './Home.css';
+import { IonContent, IonItem, IonLabel, IonList, IonPage } from "@ionic/react";
+import "./Home.css";
 
 const Home: React.FC = () => {
-
   return (
     <IonPage>
       <IonContent>
@@ -47,6 +41,9 @@ const Home: React.FC = () => {
           </IonItem>
           <IonItem routerLink="/language-proficiency">
             <IonLabel>Language Proficiency</IonLabel>
+          </IonItem>
+          <IonItem routerLink="/table">
+            <IonLabel>Table</IonLabel>
           </IonItem>
         </IonList>
 

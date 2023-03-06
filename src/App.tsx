@@ -2,6 +2,7 @@ import { Link, Redirect, Route, useHistory } from 'react-router-dom';
 import { IonApp, IonContent, IonHeader, IonPage, IonRouterOutlet, IonTitle, IonToolbar, setupIonicReact, useIonRouter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
+import TablePage from './pages/TablePage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -87,6 +88,9 @@ const App: React.FC = () => {
           </Route>
           <Route exact path="/language-proficiency">
             <LanguageProficiencyPage />
+          </Route>
+          <Route exact path="/table">
+            <TablePage />
           </Route>
           <Route exact path="/admin">
             <AdminPage />

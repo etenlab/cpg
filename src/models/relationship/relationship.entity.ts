@@ -1,31 +1,50 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, Index, RelationId } from "typeorm"
-import { nanoid } from "nanoid"
-import { Node } from "../node/node.entity"
-import { RelationshipType } from "./relationship-type.entity"
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  ManyToOne,
+  Index,
+  OneToMany,
+  JoinColumn,
+  BeforeInsert,
+} from "typeorm";
+import { nanoid } from "nanoid";
+import { Node } from "../node/node.entity";
+import { RelationshipType } from "./relationship-type.entity";
+import { RelationshipPropertyKey } from "./relationship-property-key.entity";
 
 @Entity()
 export class Relationship {
-    @PrimaryColumn({ length: 21, unique: true, default: () => nanoid()})
-    relationship_uuid!: string
+  @PrimaryColumn("uuid", { type: "varchar", length: 21 })
+  relationship_uuid!: string;
 
-    @Column("null")
-    readonly relationship_id: number | undefined
+  @BeforeInsert()
+  setId() {
+    this.relationship_uuid = nanoid();
+  }
 
-    @ManyToOne(() => RelationshipType)
-    @RelationId((relationship_type: RelationshipType) => relationship_type.type_name)
-    relationship_type!: string
+  @Column("text", { nullable: true })
+  readonly relationship_id!: string | null;
 
-    @ManyToOne(() => Node)
-    from_node!: Node
+  @ManyToOne(() => RelationshipType, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "relationship_type", referencedColumnName: "type_name" })
+  relationshipType!: RelationshipType;
 
-    @Index("idx_relationships_from_node_uuid")
-    @RelationId((node: Node) => node.node_uuid)
-    from_node_uuid!: string
+  @ManyToOne(() => Node, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "from_node_uuid", referencedColumnName: "node_uuid" })
+  fromNode!: Node;
 
-    @ManyToOne(() => Node)
-    to_node!: Node
+  // @Index("idx_relationships_from_node_uuid")
 
-    @Index("idx_relationships_to_node_uuid")
-    @RelationId((node: Node) => node.node_uuid)
-    to_node_uuid!: string
+  @ManyToOne(() => Node, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "to_node_uuid", referencedColumnName: "node_uuid" })
+  toNode!: Node;
+
+  // @Index("idx_relationships_to_node_uuid")
+
+  @OneToMany(
+    () => RelationshipPropertyKey,
+    (relationship_property_key) => relationship_property_key.relationship
+  )
+  property_keys!: RelationshipPropertyKey[];
 }

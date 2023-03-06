@@ -1,6 +1,15 @@
 import initSqlJs, { Database } from "sql.js";
 import { DataSource, Repository } from "typeorm";
-import { User } from "../models/User";
+import {
+  Node,
+  NodeType,
+  NodePropertyKey,
+  NodePropertyValue,
+  Relationship,
+  RelationshipType,
+  RelationshipPropertyKey,
+  RelationshipPropertyValue,
+} from "../models";
 
 export class DbService {
   // todo
@@ -44,27 +53,20 @@ export class DbService {
       useLocalForage: true,
       logging: ["error", "query", "schema"],
       synchronize: true,
-      entities: [User],
+      entities: [
+        Node,
+        NodeType,
+        NodePropertyKey,
+        NodePropertyValue,
+        Relationship,
+        RelationshipType,
+        RelationshipPropertyKey,
+        RelationshipPropertyValue,
+      ],
     });
   }
 
   status() {
     console.log("//todo");
-  }
-}
-
-export class UserRepository {
-  repository!: Repository<User>;
-
-  constructor(private dbService: DbService) {
-    this.repository = this.dbService.dataSource.getRepository(User);
-  }
-
-  async save(user: User) {
-    return this.repository.save(user);
-  }
-
-  async all() {
-    return this.repository.find();
   }
 }
