@@ -3,43 +3,46 @@ import {
   Column,
   PrimaryColumn,
   ManyToOne,
-  Index,
   OneToOne,
   JoinColumn,
   BeforeInsert,
-} from "typeorm";
-import { nanoid } from "nanoid";
-import { Relationship } from "./relationship.entity";
-import { RelationshipPropertyValue } from "./relationship-property-value.entity";
+} from 'typeorm';
+import { nanoid } from 'nanoid';
+import { Relationship } from './relationship.entity';
+import { RelationshipPropertyValue } from './relationship-property-value.entity';
+import { Syncable } from '../Syncable';
 
 @Entity()
-export class RelationshipPropertyKey {
-  @PrimaryColumn("uuid", { type: "varchar", length: 21 })
-  relationship_property_key_uuid!: string;
+export class RelationshipPropertyKey extends Syncable {
+  @PrimaryColumn('uuid', { type: 'varchar', length: 21, unique: true })
+  id!: string;
 
   @BeforeInsert()
   setId() {
-    this.relationship_property_key_uuid = nanoid();
+    this.id = nanoid();
   }
 
-  @Column("text", { nullable: true })
+  @Column('text', { nullable: true })
   readonly relationship_property_key_id!: string | null;
 
-  @Column("varchar")
+  @Column('varchar')
   property_key!: string;
 
-  @ManyToOne(() => Relationship, { onDelete: "CASCADE" })
+  @ManyToOne(() => Relationship, { onDelete: 'CASCADE' })
   @JoinColumn({
-    name: "relationship_uuid",
-    referencedColumnName: "relationship_uuid",
+    name: 'id',
+    referencedColumnName: 'id',
   })
   relationship!: Relationship;
 
-  // @Index("idx_relationship_property_keys_relationship_uuid")
+  // @Index("idx_relationship_property_keys_relationship_id")
+
+  @Column('varchar')
+  relationship_id!: string;
 
   @OneToOne(
     () => RelationshipPropertyValue,
-    (relationshipPropertyValue) => relationshipPropertyValue.property_key
+    (relationshipPropertyValue) => relationshipPropertyValue.property_key,
   )
   property_value!: RelationshipPropertyValue;
 }

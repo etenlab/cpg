@@ -1,4 +1,4 @@
-import { Node } from "../models";
+import { Node } from '../models';
 
 export const tableNodeToTable = (node: Node) => {
   const cells = node.node_relationships?.map((cell) => {
@@ -9,15 +9,15 @@ export const tableNodeToTable = (node: Node) => {
     return cell_data;
   });
 
-  let name = "";
+  let name = '';
   node.property_keys.forEach((key) => {
-    if (key.property_key === "name") {
+    if (key.property_key === 'name') {
       name = key.property_value.property_value;
     }
   });
 
   return {
-    node_uuid: node.node_uuid,
+    id: node.id,
     name: name,
     cells: cells || [],
   };

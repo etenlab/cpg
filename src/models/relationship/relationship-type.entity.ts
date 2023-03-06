@@ -1,7 +1,8 @@
-import { Entity, PrimaryColumn } from "typeorm"
+import { Entity, PrimaryColumn } from 'typeorm';
+import { Syncable } from '../Syncable';
 
 @Entity()
-export class RelationshipType {
-    @PrimaryColumn("varchar")
-    type_name!: string
+export class RelationshipType extends Syncable {
+  @PrimaryColumn('varchar')
+  type_name!: string;
 }
