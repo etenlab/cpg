@@ -36,6 +36,9 @@ export class NodePropertyValue extends Syncable {
   })
   property_key!: NodePropertyKey;
 
+  @Column('varchar')
+  node_property_key_id!: string;
+
   // @Index("idx_node_property_values_key_id")
   // @RelationId((node_property_key: NodePropertyKey) => node_property_key.node_property_key_id)
   // node_property_key_id!: string

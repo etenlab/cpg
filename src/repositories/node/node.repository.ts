@@ -23,6 +23,7 @@ export class NodeRepository {
 
     const new_node = this.repository.create({
       nodeType: nodeType,
+      node_type: type_name,
       sync_layer: this.syncService.syncLayer,
     });
     const node = await this.repository.save(new_node);

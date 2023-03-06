@@ -30,15 +30,24 @@ export class Relationship extends Syncable {
   @JoinColumn({ name: 'relationship_type', referencedColumnName: 'type_name' })
   relationshipType!: RelationshipType;
 
+  @Column('varchar')
+  relationship_type!: string;
+
   @ManyToOne(() => Node, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'from_node_id', referencedColumnName: 'id' })
   fromNode!: Node;
+
+  @Column('varchar')
+  from_node_id!: string;
 
   // @Index("idx_relationships_from_node_id")
 
   @ManyToOne(() => Node, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'to_node_id', referencedColumnName: 'id' })
   toNode!: Node;
+
+  @Column('varchar')
+  to_node_id!: string;
 
   // @Index("idx_relationships_to_node_id")
 

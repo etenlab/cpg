@@ -37,6 +37,7 @@ export class RelationshipPropertyKeyRepository {
     const new_property_key_instance = this.repository.create({
       property_key: key_name,
       sync_layer: this.syncService.syncLayer,
+      relationship_id: rel_id,
     } as RelationshipPropertyKey);
 
     new_property_key_instance.relationship = relationship;

@@ -42,6 +42,7 @@ export class RelationshipRepository {
       fromNode: node_from,
       toNode: node_to,
       relationshipType: relType,
+      relationship_type: type_name,
       sync_layer: this.syncService.syncLayer,
     });
 

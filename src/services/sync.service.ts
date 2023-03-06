@@ -104,7 +104,7 @@ export class SyncService {
   private setLastSyncLayer(value: number) {
     this.lastLayerSync = value;
 
-    console.log(`lastLayerSyncLayer = ${this.lastLayerSync}`);
+    console.log(`lastSyncLayer = ${this.lastLayerSync}`);
 
     localStorage.setItem(LAST_SYNC_LAYER_KEY, String(this.lastLayerSync));
   }

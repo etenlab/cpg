@@ -30,6 +30,9 @@ export class Node extends Syncable {
   @JoinColumn({ name: 'node_type', referencedColumnName: 'type_name' })
   nodeType!: NodeType;
 
+  @Column('varchar')
+  node_type!: string;
+
   @OneToMany(
     () => NodePropertyKey,
     (node_property_key) => node_property_key.node,

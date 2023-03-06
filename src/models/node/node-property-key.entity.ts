@@ -36,6 +36,9 @@ export class NodePropertyKey extends Syncable {
   // @RelationId((node: Node) => node.node_id)
   // node_id!: string
 
+  @Column('varchar')
+  node_id!: string;
+
   @OneToOne(
     () => NodePropertyValue,
     (nodePropertyValue) => nodePropertyValue.property_key,

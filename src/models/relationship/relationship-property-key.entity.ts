@@ -37,6 +37,9 @@ export class RelationshipPropertyKey extends Syncable {
 
   // @Index("idx_relationship_property_keys_relationship_id")
 
+  @Column('varchar')
+  relationship_id!: string;
+
   @OneToOne(
     () => RelationshipPropertyValue,
     (relationshipPropertyValue) => relationshipPropertyValue.property_key,

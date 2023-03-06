@@ -35,6 +35,7 @@ export class NodePropertyKeyRepository {
 
     const new_property_key_instance = this.repository.create({
       property_key: key_name,
+      node_id: node_id,
       sync_layer: this.syncService.syncLayer,
     } as NodePropertyKey);
 

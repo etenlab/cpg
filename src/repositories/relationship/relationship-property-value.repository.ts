@@ -25,6 +25,7 @@ export class RelationshipPropertyValueRepository {
     const new_property_value_instance = this.repository.create({
       property_value: JSON.stringify({ value: key_value }),
       sync_layer: this.syncService.syncLayer,
+      relationship_property_key_id: key_id,
     });
 
     new_property_value_instance.property_key = rel_property_key;
