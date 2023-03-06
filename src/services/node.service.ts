@@ -198,20 +198,18 @@ export class NodeService {
 
   // Layer 3
 
-  async createTable(name: string): Promise<Table | null> {
+  // -------- Table --------- //
+
+  async createTable(name: string): Promise<Table> {
     try {
       const table = await this.createNodeFromObject("table", {
-        name: name,
+        name,
       });
-
-      if (!table) {
-        return null;
-      }
 
       return tableNodeToTable(table);
     } catch (err) {
       console.log(err);
-      return null;
+      throw new Error('Failed to create table.');
     }
   }
 
@@ -248,7 +246,7 @@ export class NodeService {
       return tableNodeToTable(table);
     } catch (err) {
       console.log(err);
-      return null;
+      throw new Error('Failed to get table.');
     }
   }
 
@@ -257,7 +255,7 @@ export class NodeService {
     column_name: string,
     row_id: string,
     cell_data: any
-  ): Promise<TableCell | null> {
+  ): Promise<TableCell> {
     try {
       const table = await this.getTable(table_name);
       const table_cell = await this.createNodeFromObject("table-cell", {
@@ -273,7 +271,7 @@ export class NodeService {
         table_cell.node_uuid
       );
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const new_cell: TableCell = {};
       table_cell?.property_keys.forEach((key) => {
@@ -283,7 +281,53 @@ export class NodeService {
       return new_cell;
     } catch (err) {
       console.log(err);
-      return null;
+      throw new Error('Failed to add table data.');
+    }
+  }
+
+  // -------- Document --------- //
+
+  async createDocument(name: string): Promise<Node> {
+    try {
+      const document = await this.createNodeFromObject("document", {
+        name,
+      });
+
+      return document;
+    } catch (err) {
+      console.log(err);
+      throw new Error('Failed to create a new document.');
+    }
+  }
+
+  async getDocument(name: string): Promise<Node | null> {
+    try {
+      const document = await this.nodeRepo.repository.findOne({
+        relations: [
+          "nodeType",
+          "property_keys",
+          "property_keys.property_value",
+        ],
+        select: {
+          node_relationships: true,
+        },
+        where: {
+          nodeType: {
+            type_name: "document",
+          },
+          property_keys: {
+            property_key: "name",
+            property_value: {
+              property_value: name,
+            },
+          },
+        },
+      });
+
+      return document;
+    } catch (err) {
+      console.log(err);
+      throw new Error('Failed to create a new document.');
     }
   }
 }
