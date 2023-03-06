@@ -85,7 +85,7 @@ export class SyncService {
     this.serverUrl = process.env.REACT_APP_CPG_SERVER_URL;
 
     this.lastLayerSync = Number(
-      localStorage.getItem(CURRENT_SYNC_LAYER_KEY) || '-1',
+      localStorage.getItem(LAST_SYNC_LAYER_KEY) || '-1',
     );
   }
 
