@@ -30,7 +30,9 @@ export class RelationshipPropertyValueRepository {
 
     new_property_value_instance.property_key = rel_property_key;
 
-    const relationship_property_value = await this.repository.save(new_property_value_instance);
+    const relationship_property_value = await this.repository.save(
+      new_property_value_instance
+    );
 
     return relationship_property_value.relationship_property_value_uuid;
   }

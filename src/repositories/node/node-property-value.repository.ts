@@ -29,7 +29,9 @@ export class NodePropertyValueRepository {
 
     new_property_value_instance.property_key = node_property_key;
 
-    const node_property_value = await this.repository.save(new_property_value_instance);
+    const node_property_value = await this.repository.save(
+      new_property_value_instance
+    );
 
     return node_property_value.node_property_value_uuid;
   }

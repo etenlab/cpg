@@ -26,9 +26,11 @@ export class RelationshipPropertyKeyRepository {
       return property_key.relationship_property_key_uuid;
     }
 
-    const relationship = await this.dbService.dataSource.getRepository(Relationship).findOneBy({
-      relationship_uuid: rel_id,
-    });
+    const relationship = await this.dbService.dataSource
+      .getRepository(Relationship)
+      .findOneBy({
+        relationship_uuid: rel_id,
+      });
 
     if (!relationship) {
       return null;
@@ -40,7 +42,9 @@ export class RelationshipPropertyKeyRepository {
 
     new_property_key_instance.relationship = relationship;
 
-    const new_property_key = await this.repository.save(new_property_key_instance);
+    const new_property_key = await this.repository.save(
+      new_property_key_instance
+    );
 
     return new_property_key.relationship_property_key_uuid;
   }

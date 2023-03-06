@@ -273,7 +273,7 @@ export class NodeService {
         table_cell.node_uuid
       );
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const new_cell: TableCell = {};
       table_cell?.property_keys.forEach((key) => {
