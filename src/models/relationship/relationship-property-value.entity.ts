@@ -2,17 +2,17 @@ import {
   Entity,
   Column,
   PrimaryColumn,
-  Index,
   OneToOne,
   JoinColumn,
   BeforeInsert,
 } from 'typeorm';
 import { nanoid } from 'nanoid';
 import { RelationshipPropertyKey } from './relationship-property-key.entity';
+import { Syncable } from '../Syncable';
 
 @Entity()
-export class RelationshipPropertyValue {
-  @PrimaryColumn('uuid', { type: 'varchar', length: 21 })
+export class RelationshipPropertyValue extends Syncable {
+  @PrimaryColumn('uuid', { type: 'varchar', length: 21, unique: true })
   id!: string;
 
   @BeforeInsert()
@@ -28,8 +28,8 @@ export class RelationshipPropertyValue {
 
   @OneToOne(() => RelationshipPropertyKey)
   @JoinColumn({
-    name: 'relationship_property_key_uuid',
-    referencedColumnName: 'relationship_property_key_uuid',
+    name: 'id',
+    referencedColumnName: 'id',
   })
   property_key!: RelationshipPropertyKey;
 

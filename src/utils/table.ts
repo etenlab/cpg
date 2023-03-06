@@ -17,7 +17,7 @@ export const tableNodeToTable = (node: Node) => {
   });
 
   return {
-    node_uuid: node.id,
+    id: node.id,
     name: name,
     cells: cells || [],
   };

@@ -1,13 +1,14 @@
-import { Repository } from 'typeorm';
+// import { Repository } from 'typeorm';
+import { NodeType } from '../../models';
 import { Node } from '../../models/node/node.entity';
 import { DbService } from '../../services/db.service';
-import { NodeType } from '../../models';
+import { SyncService } from '../../services/sync.service';
 
 export class NodeRepository {
-  repository!: Repository<Node>;
+  constructor(private dbService: DbService, private syncService: SyncService) {}
 
-  constructor(private dbService: DbService) {
-    this.repository = this.dbService.dataSource.getRepository(Node);
+  get repository() {
+    return this.dbService.dataSource.getRepository(Node);
   }
 
   async createNode(type_name: string): Promise<Node> {
@@ -22,6 +23,7 @@ export class NodeRepository {
 
     const new_node = this.repository.create({
       nodeType: nodeType,
+      sync_layer: this.syncService.syncLayer,
     });
     const node = await this.repository.save(new_node);
 

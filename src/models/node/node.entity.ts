@@ -11,10 +11,11 @@ import { nanoid } from 'nanoid';
 import { NodeType } from './node-type.entity';
 import { NodePropertyKey } from './node-property-key.entity';
 import { Relationship } from '../relationship/relationship.entity';
+import { Syncable } from '../Syncable';
 
 @Entity()
-export class Node {
-  @PrimaryColumn('uuid', { type: 'varchar', length: 21 })
+export class Node extends Syncable {
+  @PrimaryColumn('uuid', { type: 'varchar', length: 21, unique: true })
   id!: string;
 
   @BeforeInsert()

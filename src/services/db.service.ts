@@ -1,5 +1,3 @@
-import initSqlJs, { Database } from 'sql.js';
-import { DataSource, Repository } from 'typeorm';
 import {
   Node,
   NodeType,
@@ -10,6 +8,9 @@ import {
   RelationshipPropertyKey,
   RelationshipPropertyValue,
 } from '../models';
+import initSqlJs from 'sql.js';
+import { DataSource } from 'typeorm';
+import { SyncSession } from '../models/Sync';
 
 export class DbService {
   // todo
@@ -54,6 +55,7 @@ export class DbService {
       logging: ['error', 'query', 'schema'],
       synchronize: true,
       entities: [
+        SyncSession,
         Node,
         NodeType,
         NodePropertyKey,
@@ -70,3 +72,19 @@ export class DbService {
     console.log('//todo');
   }
 }
+
+// export class UserRepository {
+//   repository!: Repository<User>;
+
+//   constructor(private dbService: DbService) {
+//     this.repository = this.dbService.dataSource.getRepository(User);
+//   }
+
+//   async save(user: User) {
+//     return this.repository.save(user);
+//   }
+
+//   async all() {
+//     return this.repository.find();
+//   }
+// }

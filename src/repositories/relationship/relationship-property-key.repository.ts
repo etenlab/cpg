@@ -1,15 +1,13 @@
-import { Repository } from 'typeorm';
 import { Relationship } from '../../models';
 import { RelationshipPropertyKey } from '../../models/relationship/relationship-property-key.entity';
 import { DbService } from '../../services/db.service';
+import { SyncService } from '../../services/sync.service';
 
 export class RelationshipPropertyKeyRepository {
-  repository!: Repository<RelationshipPropertyKey>;
+  constructor(private dbService: DbService, private syncService: SyncService) {}
 
-  constructor(private dbService: DbService) {
-    this.repository = this.dbService.dataSource.getRepository(
-      RelationshipPropertyKey,
-    );
+  private get repository() {
+    return this.dbService.dataSource.getRepository(RelationshipPropertyKey);
   }
 
   async createRelationshipPropertyKey(
@@ -18,7 +16,7 @@ export class RelationshipPropertyKeyRepository {
   ): Promise<string | null> {
     const property_key = await this.repository
       .createQueryBuilder('relPropertyKey')
-      .where('relPropertyKey.relationship_uuid = :rel_id', { rel_id })
+      .where('relPropertyKey.id = :rel_id', { rel_id })
       .andWhere('relPropertyKey.property_key = :key_name', { key_name })
       .getOne();
 
@@ -38,7 +36,8 @@ export class RelationshipPropertyKeyRepository {
 
     const new_property_key_instance = this.repository.create({
       property_key: key_name,
-    });
+      sync_layer: this.syncService.syncLayer,
+    } as RelationshipPropertyKey);
 
     new_property_key_instance.relationship = relationship;
 

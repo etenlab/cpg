@@ -1,15 +1,13 @@
-import { Repository } from 'typeorm';
 import { RelationshipPropertyKey } from '../../models';
 import { RelationshipPropertyValue } from '../../models/relationship/relationship-property-value.entity';
 import { DbService } from '../../services/db.service';
+import { SyncService } from '../../services/sync.service';
 
 export class RelationshipPropertyValueRepository {
-  repository!: Repository<RelationshipPropertyValue>;
+  constructor(private dbService: DbService, private syncService: SyncService) {}
 
-  constructor(private dbService: DbService) {
-    this.repository = this.dbService.dataSource.getRepository(
-      RelationshipPropertyValue,
-    );
+  private get repository() {
+    return this.dbService.dataSource.getRepository(RelationshipPropertyValue);
   }
 
   async createRelationshipPropertyValue(
@@ -25,7 +23,8 @@ export class RelationshipPropertyValueRepository {
     }
 
     const new_property_value_instance = this.repository.create({
-      property_value: key_value,
+      property_value: JSON.stringify({ value: key_value }),
+      sync_layer: this.syncService.syncLayer,
     });
 
     new_property_value_instance.property_key = rel_property_key;

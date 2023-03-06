@@ -3,7 +3,6 @@ import {
   Column,
   PrimaryColumn,
   ManyToOne,
-  Index,
   OneToOne,
   JoinColumn,
   BeforeInsert,
@@ -11,10 +10,11 @@ import {
 import { nanoid } from 'nanoid';
 import { Relationship } from './relationship.entity';
 import { RelationshipPropertyValue } from './relationship-property-value.entity';
+import { Syncable } from '../Syncable';
 
 @Entity()
-export class RelationshipPropertyKey {
-  @PrimaryColumn('uuid', { type: 'varchar', length: 21 })
+export class RelationshipPropertyKey extends Syncable {
+  @PrimaryColumn('uuid', { type: 'varchar', length: 21, unique: true })
   id!: string;
 
   @BeforeInsert()
@@ -30,12 +30,12 @@ export class RelationshipPropertyKey {
 
   @ManyToOne(() => Relationship, { onDelete: 'CASCADE' })
   @JoinColumn({
-    name: 'relationship_uuid',
-    referencedColumnName: 'relationship_uuid',
+    name: 'id',
+    referencedColumnName: 'id',
   })
   relationship!: Relationship;
 
-  // @Index("idx_relationship_property_keys_relationship_uuid")
+  // @Index("idx_relationship_property_keys_relationship_id")
 
   @OneToOne(
     () => RelationshipPropertyValue,

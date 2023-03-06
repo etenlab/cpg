@@ -1,13 +1,14 @@
-import { Repository } from 'typeorm';
+// import { Repository } from 'typeorm';
 import { Node } from '../../models';
 import { NodePropertyKey } from '../../models/node/node-property-key.entity';
 import { DbService } from '../../services/db.service';
+import { SyncService } from '../../services/sync.service';
 
 export class NodePropertyKeyRepository {
-  repository!: Repository<NodePropertyKey>;
+  constructor(private dbService: DbService, private syncService: SyncService) {}
 
-  constructor(private dbService: DbService) {
-    this.repository = this.dbService.dataSource.getRepository(NodePropertyKey);
+  private get repository() {
+    return this.dbService.dataSource.getRepository(NodePropertyKey);
   }
 
   async createNodePropertyKey(
@@ -16,7 +17,7 @@ export class NodePropertyKeyRepository {
   ): Promise<string | null> {
     const property_key = await this.repository
       .createQueryBuilder('nodePropertyKey')
-      .where('nodePropertyKey.node_uuid = :node_id', { node_id })
+      .where('nodePropertyKey.id = :node_id', { node_id })
       .andWhere('nodePropertyKey.property_key = :key_name', { key_name })
       .getOne();
 
@@ -34,7 +35,8 @@ export class NodePropertyKeyRepository {
 
     const new_property_key_instance = this.repository.create({
       property_key: key_name,
-    });
+      sync_layer: this.syncService.syncLayer,
+    } as NodePropertyKey);
 
     new_property_key_instance.node = node;
 

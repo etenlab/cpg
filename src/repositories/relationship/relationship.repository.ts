@@ -1,14 +1,14 @@
-import { Repository } from 'typeorm';
-import { Relationship } from '../../models/relationship/relationship.entity';
 import { Node } from '../../models/node/node.entity';
-import { DbService } from '../../services/db.service';
 import { RelationshipType } from '../../models';
+import { Relationship } from '../../models/relationship/relationship.entity';
+import { DbService } from '../../services/db.service';
+import { SyncService } from '../../services/sync.service';
 
 export class RelationshipRepository {
-  repository!: Repository<Relationship>;
+  constructor(private dbService: DbService, private syncService: SyncService) {}
 
-  constructor(private dbService: DbService) {
-    this.repository = this.dbService.dataSource.getRepository(Relationship);
+  private get repository() {
+    return this.dbService.dataSource.getRepository(Relationship);
   }
 
   async createRelationship(
@@ -42,6 +42,7 @@ export class RelationshipRepository {
       fromNode: node_from,
       toNode: node_to,
       relationshipType: relType,
+      sync_layer: this.syncService.syncLayer,
     });
 
     const relationship = await this.repository.save(new_relationship_instance);

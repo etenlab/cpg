@@ -1,5 +1,5 @@
 interface Table {
-  node_uuid?: string;
+  id?: string;
   name: string;
   cells?: TableCell[];
 }
