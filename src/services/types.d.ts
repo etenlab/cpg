@@ -9,3 +9,13 @@ interface TableCell {
   row?: string;
   data?: any;
 }
+
+interface Document {
+  id?: string;
+  name: string;
+}
+
+interface Word {
+  id?: string;
+  name: string;
+}

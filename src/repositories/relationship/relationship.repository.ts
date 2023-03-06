@@ -17,8 +17,8 @@ export class RelationshipRepository {
     type_name: string,
   ): Promise<Relationship | null> {
     // const relationship = await this.repository.save({
-    //   from_node_uuid: node_1,
-    //   to_node_uuid: node_2,
+    //   from_id: node_1,
+    //   to_id: node_2,
     //   relationship_type: type_name,
     // });
     const nodeRepo = this.dbService.dataSource.getRepository(Node);
@@ -74,7 +74,7 @@ export class RelationshipRepository {
 
   // async listRelatedNodes(node_id: string): Promise<any> {
   //   const relationships_from = await this.repository.findBy({
-  //     to_node_uuid: node_id,
+  //     to_id: node_id,
   //   });
   //   const related_from = relationships_from.map((rel) => {
   //     return {
@@ -84,7 +84,7 @@ export class RelationshipRepository {
   //   });
 
   //   const relationships_to = await this.repository.findBy({
-  //     from_node_uuid: node_id,
+  //     from_id: node_id,
   //   });
   //   const related_to = relationships_to.map((rel) => {
   //     return {

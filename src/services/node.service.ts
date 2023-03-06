@@ -200,20 +200,18 @@ export class NodeService {
 
   // Layer 3
 
-  async createTable(name: string): Promise<Table | null> {
-    try {
-      const table = await this.createNodeFromObject('table', {
-        name: name,
-      });
+  // -------- Table --------- //
 
-      if (!table) {
-        return null;
-      }
+  async createTable(name: string): Promise<Table> {
+    try {
+      const table = await this.createNodeFromObject("table", {
+        name,
+      });
 
       return tableNodeToTable(table);
     } catch (err) {
       console.log(err);
-      return null;
+      throw new Error("Failed to create a new table.");
     }
   }
 
@@ -250,7 +248,7 @@ export class NodeService {
       return tableNodeToTable(table);
     } catch (err) {
       console.log(err);
-      return null;
+      throw new Error("Failed to get table.");
     }
   }
 
@@ -258,8 +256,8 @@ export class NodeService {
     table_name: string,
     column_name: string,
     row_id: string,
-    cell_data: any,
-  ): Promise<TableCell | null> {
+    cell_data: any
+  ): Promise<TableCell> {
     try {
       const table = await this.getTable(table_name);
       const table_cell = await this.createNodeFromObject('table-cell', {
@@ -285,7 +283,90 @@ export class NodeService {
       return new_cell;
     } catch (err) {
       console.log(err);
-      return null;
+      throw new Error("Failed to add table data.");
     }
   }
+
+  // -------- Document --------- //
+
+  async createDocument(name: string): Promise<Document> {
+    try {
+      const document = await this.createNodeFromObject("document", {
+        name,
+      });
+
+      return {
+        id: document.id,
+        name: name,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new Error("Failed to create a new document.");
+    }
+  }
+
+  async getDocument(name: string): Promise<Document | null> {
+    try {
+      const document = await this.nodeRepo.getNodeByProp("document", {
+        key: "name",
+        val: name,
+      });
+
+      if (!document) {
+        return null;
+      }
+
+      return {
+        id: document.id,
+        name: name,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new Error("Failed to get document.");
+    }
+  }
+
+  // -------- Document --------- //
+
+  async createWord(name: string): Promise<Word> {
+    try {
+      const word = await this.createNodeFromObject("word", {
+        name,
+      });
+
+      return {
+        id: word.id,
+        name: name,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new Error("Failed to create a new word.");
+    }
+  }
+
+  async getWord(name: string): Promise<Word | null> {
+    try {
+      const word = await this.nodeRepo.getNodeByProp("word", {
+        key: "name",
+        val: name,
+      });
+
+      if (!word) {
+        return null;
+      }
+
+      return {
+        id: word.id,
+        name: name,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new Error("Failed to get word.");
+    }
+  }
+}
+
+interface Document {
+  id?: string;
+  name: string;
 }

@@ -56,4 +56,25 @@ export class NodeRepository {
 
     return node;
   }
+
+  async getNodeByProp(
+    type: string,
+    prop: { key: string; val: any }
+  ): Promise<Node | null> {
+    const node = await this.repository.findOne({
+      relations: ["nodeType", "property_keys", "property_keys.property_value"],
+      where: {
+        nodeType: {
+          type_name: type,
+        },
+        property_keys: {
+          property_key: prop.key,
+          property_value: {
+            property_value: prop.val,
+          },
+        },
+      },
+    });
+    return node;
+  }
 }
