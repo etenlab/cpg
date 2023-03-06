@@ -15,11 +15,11 @@ import { Relationship } from "../relationship/relationship.entity";
 @Entity()
 export class Node {
   @PrimaryColumn("uuid", { type: "varchar", length: 21 })
-  node_uuid!: string;
+  id!: string;
 
   @BeforeInsert()
   setId() {
-    this.node_uuid = nanoid();
+    this.id = nanoid();
   }
 
   @Column("text", { nullable: true })

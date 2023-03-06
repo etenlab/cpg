@@ -13,11 +13,11 @@ import { RelationshipPropertyKey } from "./relationship-property-key.entity";
 @Entity()
 export class RelationshipPropertyValue {
   @PrimaryColumn("uuid", { type: "varchar", length: 21 })
-  relationship_property_value_uuid!: string;
+  id!: string;
 
   @BeforeInsert()
   setId() {
-    this.relationship_property_value_uuid = nanoid();
+    this.id = nanoid();
   }
 
   @Column("text", { nullable: true })

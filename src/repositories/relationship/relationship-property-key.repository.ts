@@ -23,13 +23,13 @@ export class RelationshipPropertyKeyRepository {
       .getOne();
 
     if (property_key) {
-      return property_key.relationship_property_key_uuid;
+      return property_key.id;
     }
 
     const relationship = await this.dbService.dataSource
       .getRepository(Relationship)
       .findOneBy({
-        relationship_uuid: rel_id,
+        id: rel_id,
       });
 
     if (!relationship) {
@@ -46,6 +46,6 @@ export class RelationshipPropertyKeyRepository {
       new_property_key_instance
     );
 
-    return new_property_key.relationship_property_key_uuid;
+    return new_property_key.id;
   }
 }

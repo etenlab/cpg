@@ -22,8 +22,8 @@ export class RelationshipRepository {
     //   relationship_type: type_name,
     // });
     const nodeRepo = this.dbService.dataSource.getRepository(Node);
-    const node_from = await nodeRepo.findOneBy({ node_uuid: node_1 });
-    const node_to = await nodeRepo.findOneBy({ node_uuid: node_2 });
+    const node_from = await nodeRepo.findOneBy({ id: node_1 });
+    const node_to = await nodeRepo.findOneBy({ id: node_2 });
 
     if (!node_from || !node_to) {
       return null;
@@ -64,7 +64,7 @@ export class RelationshipRepository {
 
   async readRelationship(rel_id: string): Promise<Relationship | null> {
     const relationship = await this.repository.findOneBy({
-      relationship_uuid: rel_id,
+      id: rel_id,
     });
 
     return relationship;

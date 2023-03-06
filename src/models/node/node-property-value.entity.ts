@@ -13,11 +13,11 @@ import { NodePropertyKey } from "./node-property-key.entity";
 @Entity()
 export class NodePropertyValue {
   @PrimaryColumn("uuid", { type: "varchar", length: 21 })
-  node_property_value_uuid!: string;
+  id!: string;
 
   @BeforeInsert()
   setId() {
-    this.node_property_value_uuid = nanoid();
+    this.id = nanoid();
   }
 
   @Column("text", { nullable: true })

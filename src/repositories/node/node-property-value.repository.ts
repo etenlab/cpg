@@ -17,7 +17,7 @@ export class NodePropertyValueRepository {
   ): Promise<string | null> {
     const node_property_key = await this.dbService.dataSource
       .getRepository(NodePropertyKey)
-      .findOneBy({ node_property_key_uuid: key_id });
+      .findOneBy({ id: key_id });
 
     if (!node_property_key) {
       return null;
@@ -33,6 +33,6 @@ export class NodePropertyValueRepository {
       new_property_value_instance
     );
 
-    return node_property_value.node_property_value_uuid;
+    return node_property_value.id;
   }
 }

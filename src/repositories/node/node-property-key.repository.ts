@@ -21,12 +21,12 @@ export class NodePropertyKeyRepository {
       .getOne();
 
     if (property_key) {
-      return property_key.node_property_key_uuid;
+      return property_key.id;
     }
 
     const node = await this.dbService.dataSource
       .getRepository(Node)
-      .findOneBy({ node_uuid: node_id });
+      .findOneBy({ id: node_id });
 
     if (!node) {
       return null;
@@ -42,6 +42,6 @@ export class NodePropertyKeyRepository {
       new_property_key_instance
     );
 
-    return new_property_key.node_property_key_uuid;
+    return new_property_key.id;
   }
 }

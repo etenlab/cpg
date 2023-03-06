@@ -18,7 +18,7 @@ export class RelationshipPropertyValueRepository {
   ): Promise<string | null> {
     const rel_property_key = await this.dbService.dataSource
       .getRepository(RelationshipPropertyKey)
-      .findOneBy({ relationship_property_key_uuid: key_id });
+      .findOneBy({ id: key_id });
 
     if (!rel_property_key) {
       return null;
@@ -34,6 +34,6 @@ export class RelationshipPropertyValueRepository {
       new_property_value_instance
     );
 
-    return relationship_property_value.relationship_property_value_uuid;
+    return relationship_property_value.id;
   }
 }

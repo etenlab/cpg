@@ -49,7 +49,7 @@ export class NodeRepository {
   }
 
   async readNode(node_id: string): Promise<Node | null> {
-    const node = await this.repository.findOneBy({ node_uuid: node_id });
+    const node = await this.repository.findOneBy({ id: node_id });
 
     return node;
   }

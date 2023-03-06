@@ -36,7 +36,7 @@ export class NodeService {
     Object.entries(obj).forEach(async ([key, value]) => {
       const property_key_uuid =
         await this.nodePropertyKeyRepo.createNodePropertyKey(
-          node.node_uuid,
+          node.id,
           key
         );
       if (property_key_uuid) {
@@ -72,7 +72,7 @@ export class NodeService {
       Object.entries(obj).forEach(async ([key, value]) => {
         const property_key_uuid =
           await this.relationshipPropertyKeyRepo.createRelationshipPropertyKey(
-            relationship.relationship_uuid,
+            relationship.id,
             key
           );
         if (property_key_uuid) {
@@ -83,7 +83,7 @@ export class NodeService {
         }
       });
 
-      return relationship.relationship_uuid;
+      return relationship.id;
     } catch (err) {
       console.log(err);
       return null;
@@ -103,7 +103,7 @@ export class NodeService {
 
     const from_node = await this.createNodeFromObject(node_type_name, obj);
     const relationship = await this.relationshipRepo.createRelationship(
-      from_node.node_uuid,
+      from_node.id,
       node_uuid,
       rel_type_name
     );
@@ -128,7 +128,7 @@ export class NodeService {
     const to_node = await this.createNodeFromObject(node_type_name, obj);
     const relationship = await this.relationshipRepo.createRelationship(
       node_uuid,
-      to_node.node_uuid,
+      to_node.id,
       rel_type_name
     );
 
@@ -148,7 +148,7 @@ export class NodeService {
       Object.entries(obj).forEach(async ([key, value]) => {
         const property_key_uuid =
           await this.nodePropertyKeyRepo.createNodePropertyKey(
-            node.node_uuid,
+            node.id,
             key
           );
         if (property_key_uuid) {
@@ -178,7 +178,7 @@ export class NodeService {
       Object.entries(obj).forEach(async ([key, value]) => {
         const property_key_uuid =
           await this.relationshipPropertyKeyRepo.createRelationshipPropertyKey(
-            rel.relationship_uuid,
+            rel.id,
             key
           );
         if (property_key_uuid) {
@@ -270,7 +270,7 @@ export class NodeService {
         "table-to-table-cell",
         {},
         table?.node_uuid,
-        table_cell.node_uuid
+        table_cell.id
       );
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
