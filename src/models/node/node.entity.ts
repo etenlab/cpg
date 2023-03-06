@@ -6,15 +6,15 @@ import {
   JoinColumn,
   PrimaryColumn,
   BeforeInsert,
-} from "typeorm";
-import { nanoid } from "nanoid";
-import { NodeType } from "./node-type.entity";
-import { NodePropertyKey } from "./node-property-key.entity";
-import { Relationship } from "../relationship/relationship.entity";
+} from 'typeorm';
+import { nanoid } from 'nanoid';
+import { NodeType } from './node-type.entity';
+import { NodePropertyKey } from './node-property-key.entity';
+import { Relationship } from '../relationship/relationship.entity';
 
 @Entity()
 export class Node {
-  @PrimaryColumn("uuid", { type: "varchar", length: 21 })
+  @PrimaryColumn('uuid', { type: 'varchar', length: 21 })
   id!: string;
 
   @BeforeInsert()
@@ -22,16 +22,16 @@ export class Node {
     this.id = nanoid();
   }
 
-  @Column("text", { nullable: true })
+  @Column('text', { nullable: true })
   readonly node_id!: string | null;
 
-  @ManyToOne(() => NodeType, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "node_type", referencedColumnName: "type_name" })
+  @ManyToOne(() => NodeType, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'node_type', referencedColumnName: 'type_name' })
   nodeType!: NodeType;
 
   @OneToMany(
     () => NodePropertyKey,
-    (node_property_key) => node_property_key.node
+    (node_property_key) => node_property_key.node,
   )
   property_keys!: NodePropertyKey[];
 

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { NodeService } from "../services/node.service";
-import useDbService from "./useDbService";
+import { useEffect, useState } from 'react';
+import { NodeService } from '../services/node.service';
+import useDbService from './useDbService';
 
 export default function useNodeServices() {
   const { service } = useDbService();

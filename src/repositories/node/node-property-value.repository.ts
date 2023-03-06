@@ -1,7 +1,7 @@
-import { Repository } from "typeorm";
-import { NodePropertyKey } from "../../models";
-import { NodePropertyValue } from "../../models/node/node-property-value.entity";
-import { DbService } from "../../services/db.service";
+import { Repository } from 'typeorm';
+import { NodePropertyKey } from '../../models';
+import { NodePropertyValue } from '../../models/node/node-property-value.entity';
+import { DbService } from '../../services/db.service';
 
 export class NodePropertyValueRepository {
   repository!: Repository<NodePropertyValue>;
@@ -13,7 +13,7 @@ export class NodePropertyValueRepository {
 
   async createNodePropertyValue(
     key_id: string,
-    key_value: any
+    key_value: any,
   ): Promise<string | null> {
     const node_property_key = await this.dbService.dataSource
       .getRepository(NodePropertyKey)
@@ -30,7 +30,7 @@ export class NodePropertyValueRepository {
     new_property_value_instance.property_key = node_property_key;
 
     const node_property_value = await this.repository.save(
-      new_property_value_instance
+      new_property_value_instance,
     );
 
     return node_property_value.id;

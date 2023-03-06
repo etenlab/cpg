@@ -1,7 +1,7 @@
-import { Repository } from "typeorm";
-import { Node } from "../../models/node/node.entity";
-import { DbService } from "../../services/db.service";
-import { NodeType } from "../../models";
+import { Repository } from 'typeorm';
+import { Node } from '../../models/node/node.entity';
+import { DbService } from '../../services/db.service';
+import { NodeType } from '../../models';
 
 export class NodeRepository {
   repository!: Repository<Node>;
@@ -30,7 +30,7 @@ export class NodeRepository {
 
   async listAllNodesByType(type_name: string): Promise<Node[]> {
     const nodes = await this.repository.find({
-      relations: ["nodeType", "property_keys", "property_keys.property_value"],
+      relations: ['nodeType', 'property_keys', 'property_keys.property_value'],
       select: {
         property_keys: {
           property_key: true,

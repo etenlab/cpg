@@ -1,13 +1,13 @@
-import { NodePropertyKeyRepository } from "../repositories/node/node-property-key.repository";
-import { NodePropertyValueRepository } from "../repositories/node/node-property-value.repository";
-import { NodeRepository } from "../repositories/node/node.repository";
-import { RelationshipPropertyKeyRepository } from "../repositories/relationship/relationship-property-key.repository";
-import { RelationshipPropertyValueRepository } from "../repositories/relationship/relationship-property-value.repository";
-import { RelationshipRepository } from "../repositories/relationship/relationship.repository";
-import { DbService } from "./db.service";
-import { Node } from "../models/node/node.entity";
-import { Relationship } from "../models/relationship/relationship.entity";
-import { tableNodeToTable } from "../utils/table";
+import { NodePropertyKeyRepository } from '../repositories/node/node-property-key.repository';
+import { NodePropertyValueRepository } from '../repositories/node/node-property-value.repository';
+import { NodeRepository } from '../repositories/node/node.repository';
+import { RelationshipPropertyKeyRepository } from '../repositories/relationship/relationship-property-key.repository';
+import { RelationshipPropertyValueRepository } from '../repositories/relationship/relationship-property-value.repository';
+import { RelationshipRepository } from '../repositories/relationship/relationship.repository';
+import { DbService } from './db.service';
+import { Node } from '../models/node/node.entity';
+import { Relationship } from '../models/relationship/relationship.entity';
+import { tableNodeToTable } from '../utils/table';
 
 export class NodeService {
   nodeRepo!: NodeRepository;
@@ -24,7 +24,7 @@ export class NodeService {
     this.nodePropertyValueRepo = new NodePropertyValueRepository(dbService);
     this.relationshipRepo = new RelationshipRepository(dbService);
     this.relationshipPropertyKeyRepo = new RelationshipPropertyKeyRepository(
-      dbService
+      dbService,
     );
     this.relationshipPropertyValueRepo =
       new RelationshipPropertyValueRepository(dbService);
@@ -35,14 +35,11 @@ export class NodeService {
     const node = await this.nodeRepo.createNode(type_name);
     Object.entries(obj).forEach(async ([key, value]) => {
       const property_key_uuid =
-        await this.nodePropertyKeyRepo.createNodePropertyKey(
-          node.id,
-          key
-        );
+        await this.nodePropertyKeyRepo.createNodePropertyKey(node.id, key);
       if (property_key_uuid) {
         await this.nodePropertyValueRepo.createNodePropertyValue(
           property_key_uuid,
-          value
+          value,
         );
       }
     });
@@ -54,7 +51,7 @@ export class NodeService {
     type_name: string,
     obj: Object,
     from_node: string | undefined,
-    to_node: string | undefined
+    to_node: string | undefined,
   ): Promise<string | null> {
     if (from_node === undefined || to_node === undefined) {
       return null;
@@ -63,7 +60,7 @@ export class NodeService {
       const relationship = await this.relationshipRepo.createRelationship(
         from_node,
         to_node,
-        type_name
+        type_name,
       );
       if (!relationship) {
         return null;
@@ -73,12 +70,12 @@ export class NodeService {
         const property_key_uuid =
           await this.relationshipPropertyKeyRepo.createRelationshipPropertyKey(
             relationship.id,
-            key
+            key,
           );
         if (property_key_uuid) {
           await this.relationshipPropertyValueRepo.createRelationshipPropertyValue(
             property_key_uuid,
-            value
+            value,
           );
         }
       });
@@ -94,7 +91,7 @@ export class NodeService {
     node_uuid: string,
     node_type_name: string,
     rel_type_name: string,
-    obj: {}
+    obj: {},
   ) {
     const to_node = await this.nodeRepo.readNode(node_uuid);
     if (!to_node) {
@@ -105,7 +102,7 @@ export class NodeService {
     const relationship = await this.relationshipRepo.createRelationship(
       from_node.id,
       node_uuid,
-      rel_type_name
+      rel_type_name,
     );
 
     return {
@@ -118,7 +115,7 @@ export class NodeService {
     node_uuid: string,
     node_type_name: string,
     rel_type_name: string,
-    obj: {}
+    obj: {},
   ) {
     const from_node = await this.nodeRepo.readNode(node_uuid);
     if (!from_node) {
@@ -129,7 +126,7 @@ export class NodeService {
     const relationship = await this.relationshipRepo.createRelationship(
       node_uuid,
       to_node.id,
-      rel_type_name
+      rel_type_name,
     );
 
     return {
@@ -147,14 +144,11 @@ export class NodeService {
 
       Object.entries(obj).forEach(async ([key, value]) => {
         const property_key_uuid =
-          await this.nodePropertyKeyRepo.createNodePropertyKey(
-            node.id,
-            key
-          );
+          await this.nodePropertyKeyRepo.createNodePropertyKey(node.id, key);
         if (property_key_uuid) {
           await this.nodePropertyValueRepo.createNodePropertyValue(
             property_key_uuid,
-            value
+            value,
           );
         }
       });
@@ -168,7 +162,7 @@ export class NodeService {
 
   async upsertRelationshipObject(
     rel_uuid: string,
-    obj: Object
+    obj: Object,
   ): Promise<Relationship | null> {
     try {
       const rel = await this.relationshipRepo.readRelationship(rel_uuid);
@@ -179,12 +173,12 @@ export class NodeService {
         const property_key_uuid =
           await this.relationshipPropertyKeyRepo.createRelationshipPropertyKey(
             rel.id,
-            key
+            key,
           );
         if (property_key_uuid) {
           await this.relationshipPropertyValueRepo.createRelationshipPropertyValue(
             property_key_uuid,
-            value
+            value,
           );
         }
       });
@@ -200,7 +194,7 @@ export class NodeService {
 
   async createTable(name: string): Promise<Table | null> {
     try {
-      const table = await this.createNodeFromObject("table", {
+      const table = await this.createNodeFromObject('table', {
         name: name,
       });
 
@@ -219,23 +213,23 @@ export class NodeService {
     try {
       const table: Node | null = await this.nodeRepo.repository.findOne({
         relations: [
-          "nodeType",
-          "property_keys",
-          "property_keys.property_value",
-          "node_relationships",
-          "node_relationships.toNode",
-          "node_relationships.toNode.property_keys",
-          "node_relationships.toNode.property_keys.property_value",
+          'nodeType',
+          'property_keys',
+          'property_keys.property_value',
+          'node_relationships',
+          'node_relationships.toNode',
+          'node_relationships.toNode.property_keys',
+          'node_relationships.toNode.property_keys.property_value',
         ],
         select: {
           node_relationships: true,
         },
         where: {
           nodeType: {
-            type_name: "table",
+            type_name: 'table',
           },
           property_keys: {
-            property_key: "name",
+            property_key: 'name',
             property_value: {
               property_value: name,
             },
@@ -256,21 +250,21 @@ export class NodeService {
     table_name: string,
     column_name: string,
     row_id: string,
-    cell_data: any
+    cell_data: any,
   ): Promise<TableCell | null> {
     try {
       const table = await this.getTable(table_name);
-      const table_cell = await this.createNodeFromObject("table-cell", {
+      const table_cell = await this.createNodeFromObject('table-cell', {
         column: column_name,
         row: row_id,
         data: cell_data,
       });
 
       await this.createRelationshipFromObject(
-        "table-to-table-cell",
+        'table-to-table-cell',
         {},
         table?.node_uuid,
-        table_cell.id
+        table_cell.id,
       );
 
       await new Promise((resolve) => setTimeout(resolve, 1000));

@@ -1,8 +1,8 @@
-import { Repository } from "typeorm";
-import { Relationship } from "../../models/relationship/relationship.entity";
-import { Node } from "../../models/node/node.entity";
-import { DbService } from "../../services/db.service";
-import { RelationshipType } from "../../models";
+import { Repository } from 'typeorm';
+import { Relationship } from '../../models/relationship/relationship.entity';
+import { Node } from '../../models/node/node.entity';
+import { DbService } from '../../services/db.service';
+import { RelationshipType } from '../../models';
 
 export class RelationshipRepository {
   repository!: Repository<Relationship>;
@@ -14,7 +14,7 @@ export class RelationshipRepository {
   async createRelationship(
     node_1: string,
     node_2: string,
-    type_name: string
+    type_name: string,
   ): Promise<Relationship | null> {
     // const relationship = await this.repository.save({
     //   from_node_uuid: node_1,
@@ -54,9 +54,9 @@ export class RelationshipRepository {
     //   relationship_type: type_name,
     // });
     const relationships = await this.repository
-      .createQueryBuilder("rel")
-      .leftJoinAndSelect("rel.relationshipType", "relationship_type")
-      .where("rel.relationship_type = :type_name", { type_name })
+      .createQueryBuilder('rel')
+      .leftJoinAndSelect('rel.relationshipType', 'relationship_type')
+      .where('rel.relationship_type = :type_name', { type_name })
       .getMany();
 
     return relationships;

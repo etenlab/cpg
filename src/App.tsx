@@ -101,7 +101,7 @@ const App: React.FC = () => {
         </IonRouterOutlet>
       </IonReactRouter>
     </IonContent>
-  </IonApp>
+  </IonApp>  
 };
 
 export default App;

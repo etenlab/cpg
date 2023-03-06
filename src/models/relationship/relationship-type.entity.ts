@@ -1,7 +1,7 @@
-import { Entity, PrimaryColumn } from "typeorm";
+import { Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class RelationshipType {
-  @PrimaryColumn("varchar")
+  @PrimaryColumn('varchar')
   type_name!: string;
 }
