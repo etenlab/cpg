@@ -326,7 +326,7 @@ export class NodeService {
     }
   }
 
-  // -------- Document --------- //
+  // -------- Word --------- //
 
   async createWord(name: string): Promise<Word> {
     try {
@@ -363,6 +363,25 @@ export class NodeService {
       console.log(err);
       throw new Error("Failed to get word.");
     }
+  }
+
+  // -------- Word-Sequence --------- //
+
+  async createWordSequence(text: string, document: string, creator: string, import_uid: string): Promise<Node> {
+    const word_sequence = await this.createNodeFromObject("word-sequence", {
+      "import-uid": import_uid
+    });
+
+    const words = text.split(" ");
+    for (const [i, word] of words.entries()) {
+      const new_word = await this.createWord(word);
+      await this.createRelationshipFromObject("word-sequence-to-word", { position: i + 1 }, word_sequence.id, new_word.id);
+    }
+
+    await this.createRelationshipFromObject("word-sequence-to-document", {}, word_sequence.id, document);
+    await this.createRelationshipFromObject("word-sequence-to-creator", {}, word_sequence.id, creator);
+
+    return word_sequence;
   }
 }
 
