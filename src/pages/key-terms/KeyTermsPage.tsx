@@ -1,7 +1,7 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSelect, IonSelectOption, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSelect, IonSelectOption, IonToolbar, useIonRouter } from '@ionic/react';
 import { Stack, Typography } from '@mui/material'
 import { useRef, useState } from 'react';
-import { ellipsisHorizontal } from 'ionicons/icons'
+import { chatbubbles, ellipsisHorizontal } from 'ionicons/icons'
 import { LanguageModel, TermModel } from './KeyTermsDataModels';
 import AddNewTermModal from './AddNewTermModal';
 import AddNewDefinitionModal from './AddNewDefinition';
@@ -37,6 +37,7 @@ const KeyTermsPage: React.FC = () => {
 
     const [state, setState] = useState<IState>({ ...defaultState })
     const refCurTerm = useRef<string | number>()
+    const router = useIonRouter()
 
     const updateState = (newState: Partial<IState>) => {
         setState((prevState) => {
@@ -88,42 +89,52 @@ const KeyTermsPage: React.FC = () => {
                         <IonLabel>Language ID</IonLabel>
                         <IonInput type={'text'} className='bordered-form-field' ></IonInput>
                     </IonItem>
-                    <IonItem lines='none'>
-                        <IonButton slot='end' onClick={() => { updateState({ isTermModalOpen: true }) }}>Add New Term</IonButton>
+                    <IonItem lines='none' className='ion-no-padding'>
+                        <IonButton slot='end' onClick={() => { updateState({ isTermModalOpen: true }) }} className='no-mr'>Add New Term</IonButton>
+                    </IonItem>
+                    <IonItem lines='none' className='ion-no-padding'>
+                        <Stack direction={'column'} className={'full-width'}>
+                            {
+                                state.terms.map((term, tIdx) => {
+                                    return (
+                                        <Stack key={tIdx} direction={'row'} className="phrase-box">
+                                            <Stack flex={0.5} direction={'row'} flexWrap={'wrap'}>
+                                                {term.term}
+                                                <IonIcon onClick={() => {
+                                                    router.push(`discussion`)
+                                                }} icon={chatbubbles} size={'small'} color={'primary'} className={'ml-1'}></IonIcon>
+                                            </Stack>
+                                            <Stack flex={1} direction={'column'}>
+                                                {
+                                                    term.definitions.map((definition, dIdx) => {
+                                                        return (
+                                                            <Stack key={dIdx} direction={'row'} className='def-item' alignItems={'center'}>
+                                                                {/* <IonIcon icon={disc} color={'dark'} size={'small'} className='mr-1' /> */}
+                                                                <span className='dot'>&#x2022;</span>
+                                                                <Stack direction={'row'} flexWrap={'wrap'}>
+                                                                    {definition.definition}
+                                                                    <IonIcon onClick={() => {
+                                                                        router.push(`discussion`)
+                                                                    }} icon={chatbubbles} size={'small'} color={'primary'} className={'ml-1'}></IonIcon>
+                                                                </Stack>
+                                                            </Stack>
+                                                        )
+                                                    })
+                                                }
+                                                <Stack direction={'row'} className='mt-1'>
+                                                    <IonButton slot='end' size='small' onClick={() => {
+                                                        refCurTerm.current = term.id
+                                                        updateState({ isDefinitionModalOpen: true })
+                                                    }}>Add New Definition</IonButton>
+                                                </Stack>
+                                            </Stack>
+                                        </Stack>
+                                    )
+                                })
+                            }
+                        </Stack>
                     </IonItem>
                 </IonList>
-                <Stack direction={'column'}>
-                    {
-                        state.terms.map((term, tIdx) => {
-                            return (
-                                <Stack key={tIdx} direction={'row'} className="phrase-box">
-                                    <Stack flex={0.5}>
-                                        {term.term}
-                                    </Stack>
-                                    <Stack flex={1} direction={'column'}>
-                                        {
-                                            term.definitions.map((definition, dIdx) => {
-                                                return (
-                                                    <Stack key={dIdx} direction={'row'} className='def-item' alignItems={'center'}>
-                                                        {/* <IonIcon icon={disc} color={'dark'} size={'small'} className='mr-1' /> */}
-                                                        <span className='dot'>&#x2022;</span>
-                                                        <Stack>{definition.definition}</Stack>
-                                                    </Stack>
-                                                )
-                                            })
-                                        }
-                                        <Stack direction={'row'} className='mt-1'>
-                                            <IonButton slot='end' size='small' onClick={() => {
-                                                refCurTerm.current = term.id
-                                                updateState({ isDefinitionModalOpen: true })
-                                            }}>Add New Definition</IonButton>
-                                        </Stack>
-                                    </Stack>
-                                </Stack>
-                            )
-                        })
-                    }
-                </Stack>
                 <AddNewTermModal isOpen={state.isTermModalOpen} onDismiss={onTermModalDismiss} />
                 <AddNewDefinitionModal isOpen={state.isDefinitionModalOpen} onDismiss={onDefinitionModalDismiss} />
             </IonContent>
