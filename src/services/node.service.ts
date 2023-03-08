@@ -204,14 +204,14 @@ export class NodeService {
 
   async createTable(name: string): Promise<Table> {
     try {
-      const table = await this.createNodeFromObject("table", {
+      const table = await this.createNodeFromObject('table', {
         name,
       });
 
       return tableNodeToTable(table);
     } catch (err) {
       console.log(err);
-      throw new Error("Failed to create a new table.");
+      throw new Error('Failed to create a new table.');
     }
   }
 
@@ -248,7 +248,7 @@ export class NodeService {
       return tableNodeToTable(table);
     } catch (err) {
       console.log(err);
-      throw new Error("Failed to get table.");
+      throw new Error('Failed to get table.');
     }
   }
 
@@ -256,7 +256,7 @@ export class NodeService {
     table_name: string,
     column_name: string,
     row_id: string,
-    cell_data: any
+    cell_data: any,
   ): Promise<TableCell> {
     try {
       const table = await this.getTable(table_name);
@@ -283,7 +283,7 @@ export class NodeService {
       return new_cell;
     } catch (err) {
       console.log(err);
-      throw new Error("Failed to add table data.");
+      throw new Error('Failed to add table data.');
     }
   }
 
@@ -291,7 +291,7 @@ export class NodeService {
 
   async createDocument(name: string): Promise<Document> {
     try {
-      const document = await this.createNodeFromObject("document", {
+      const document = await this.createNodeFromObject('document', {
         name,
       });
 
@@ -301,14 +301,14 @@ export class NodeService {
       };
     } catch (err) {
       console.log(err);
-      throw new Error("Failed to create a new document.");
+      throw new Error('Failed to create a new document.');
     }
   }
 
   async getDocument(name: string): Promise<Document | null> {
     try {
-      const document = await this.nodeRepo.getNodeByProp("document", {
-        key: "name",
+      const document = await this.nodeRepo.getNodeByProp('document', {
+        key: 'name',
         val: name,
       });
 
@@ -322,7 +322,7 @@ export class NodeService {
       };
     } catch (err) {
       console.log(err);
-      throw new Error("Failed to get document.");
+      throw new Error('Failed to get document.');
     }
   }
 
@@ -330,8 +330,10 @@ export class NodeService {
 
   async createWord(name: string): Promise<Word> {
     try {
-      const word = await this.createNodeFromObject("word", {
-        name,
+      const word = await this.createNodeFromObject('word', {
+        name: {
+          value: name,
+        },
       });
 
       return {
@@ -340,15 +342,17 @@ export class NodeService {
       };
     } catch (err) {
       console.log(err);
-      throw new Error("Failed to create a new word.");
+      throw new Error('Failed to create a new word.');
     }
   }
 
   async getWord(name: string): Promise<Word | null> {
     try {
-      const word = await this.nodeRepo.getNodeByProp("word", {
-        key: "name",
-        val: name,
+      const word = await this.nodeRepo.getNodeByProp('word', {
+        key: 'name',
+        val: {
+          value: name,
+        },
       });
 
       if (!word) {
@@ -361,27 +365,105 @@ export class NodeService {
       };
     } catch (err) {
       console.log(err);
-      throw new Error("Failed to get word.");
+      throw new Error('Failed to get word.');
     }
   }
 
   // -------- Word-Sequence --------- //
 
-  async createWordSequence(text: string, document: string, creator: string, import_uid: string): Promise<Node> {
-    const word_sequence = await this.createNodeFromObject("word-sequence", {
-      "import-uid": import_uid
+  async createWordSequence(
+    text: string,
+    document: string,
+    creator: string,
+    import_uid: string,
+  ): Promise<Node> {
+    const word_sequence = await this.createNodeFromObject('word-sequence', {
+      'import-uid': import_uid,
     });
 
-    const words = text.split(" ");
+    const words = text.split(' ');
     for (const [i, word] of words.entries()) {
       const new_word = await this.createWord(word);
-      await this.createRelationshipFromObject("word-sequence-to-word", { position: i + 1 }, word_sequence.id, new_word.id);
+      await this.createRelationshipFromObject(
+        'word-sequence-to-word',
+        { position: i + 1 },
+        word_sequence.id,
+        new_word.id,
+      );
     }
 
-    await this.createRelationshipFromObject("word-sequence-to-document", {}, word_sequence.id, document);
-    await this.createRelationshipFromObject("word-sequence-to-creator", {}, word_sequence.id, creator);
+    await this.createRelationshipFromObject(
+      'word-sequence-to-document',
+      {},
+      word_sequence.id,
+      document,
+    );
+    await this.createRelationshipFromObject(
+      'word-sequence-to-creator',
+      {},
+      word_sequence.id,
+      creator,
+    );
 
     return word_sequence;
+  }
+
+  async getText(word_sequence_id: string): Promise<string | null> {
+    const word_sequence = await this.nodeRepo.repository.findOne({
+      relations: [
+        'node_relationships',
+        'node_relationships.toNode',
+        'node_relationships.toNode.property_keys',
+        'node_relationships.toNode.property_keys.property_value',
+      ],
+      where: {
+        node_id: word_sequence_id,
+      },
+    });
+
+    if (!word_sequence || !word_sequence.node_relationships) {
+      return null;
+    }
+
+    let words: Array<string> = [];
+
+    word_sequence.node_relationships.forEach((rel) => {
+      if (rel.relationship_type === 'word-sequence-to-word') {
+        words.push(
+          rel.toNode.property_keys.find((key) => key.property_key === 'word')
+            ?.property_value.property_value,
+        );
+      }
+    });
+
+    return words.join(' ');
+  }
+
+  // -------- Word-Sequence-Connection --------- //
+
+  async appendWordSequence(from: string, to: string): Promise<string | null> {
+    const word_sequence_connection = await this.createRelationshipFromObject(
+      'word-sequence-to-word-sequence',
+      {},
+      from,
+      to,
+    );
+
+    return word_sequence_connection;
+  }
+
+  async getWordSequence(text: string): Promise<string[]> {
+    const word_sequences = await this.nodeRepo.listAllNodesByType(
+      'word-sequence',
+    );
+    const filtered_word_sequences = await Promise.all(
+      word_sequences.filter(async (word_sequence) => {
+        const word_sequence_text = await this.getText(word_sequence.id);
+        return word_sequence_text === text;
+      }),
+    );
+
+    return filtered_word_sequences.map((sequence) => sequence.id);
   }
 }
 
