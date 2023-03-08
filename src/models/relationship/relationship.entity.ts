@@ -1,31 +1,59 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, Index, RelationId } from "typeorm"
-import { nanoid } from "nanoid"
-import { Node } from "../node/node.entity"
-import { RelationshipType } from "./relationship-type.entity"
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  BeforeInsert,
+} from 'typeorm';
+import { nanoid } from 'nanoid';
+import { Node } from '../node/node.entity';
+import { RelationshipType } from './relationship-type.entity';
+import { RelationshipPropertyKey } from './relationship-property-key.entity';
+import { Syncable } from '../Syncable';
 
 @Entity()
-export class Relationship {
-    @PrimaryColumn({ length: 21, unique: true, default: () => nanoid()})
-    relationship_uuid!: string
+export class Relationship extends Syncable {
+  @PrimaryColumn('uuid', { type: 'varchar', length: 21 })
+  id!: string;
 
-    @Column("null")
-    readonly relationship_id: number | undefined
+  @BeforeInsert()
+  setId() {
+    this.id = nanoid();
+  }
 
-    @ManyToOne(() => RelationshipType)
-    @RelationId((relationship_type: RelationshipType) => relationship_type.type_name)
-    relationship_type!: string
+  @Column('text', { nullable: true })
+  readonly relationship_id!: string | null;
 
-    @ManyToOne(() => Node)
-    from_node!: Node
+  @ManyToOne(() => RelationshipType, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'relationship_type', referencedColumnName: 'type_name' })
+  relationshipType!: RelationshipType;
 
-    @Index("idx_relationships_from_node_uuid")
-    @RelationId((node: Node) => node.node_uuid)
-    from_node_uuid!: string
+  @Column('varchar')
+  relationship_type!: string;
 
-    @ManyToOne(() => Node)
-    to_node!: Node
+  @ManyToOne(() => Node, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'from_node_id', referencedColumnName: 'id' })
+  fromNode!: Node;
 
-    @Index("idx_relationships_to_node_uuid")
-    @RelationId((node: Node) => node.node_uuid)
-    to_node_uuid!: string
+  @Column('varchar')
+  from_node_id!: string;
+
+  // @Index("idx_relationships_from_node_id")
+
+  @ManyToOne(() => Node, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'to_node_id', referencedColumnName: 'id' })
+  toNode!: Node;
+
+  @Column('varchar')
+  to_node_id!: string;
+
+  // @Index("idx_relationships_to_node_id")
+
+  @OneToMany(
+    () => RelationshipPropertyKey,
+    (relationship_property_key) => relationship_property_key.relationship,
+  )
+  property_keys!: RelationshipPropertyKey[];
 }

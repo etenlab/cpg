@@ -1,6 +1,16 @@
-import initSqlJs, { Database } from "sql.js";
-import { DataSource, Repository } from "typeorm";
-import { User } from "../models/User";
+import {
+  Node,
+  NodeType,
+  NodePropertyKey,
+  NodePropertyValue,
+  Relationship,
+  RelationshipType,
+  RelationshipPropertyKey,
+  RelationshipPropertyValue,
+} from '../models';
+import initSqlJs from 'sql.js';
+import { DataSource } from 'typeorm';
+import { SyncSession } from '../models/Sync';
 
 export class DbService {
   // todo
@@ -26,45 +36,55 @@ export class DbService {
   }
 
   private async initLocalForage() {
-    const localForageImport = await import("localforage");
+    const localForageImport = await import('localforage');
     this.localForage = localForageImport.default;
     (window as any).localforage = this.localForage;
   }
 
   private configureConnection() {
     this.localForage.config({
-      description: "user",
+      description: 'user',
       driver: this.localForage.INDEXEDDB,
     });
 
     return new DataSource({
-      type: "sqljs",
+      type: 'sqljs',
       autoSave: true,
-      location: "user",
+      location: 'user',
       useLocalForage: true,
-      logging: ["error", "query", "schema"],
+      logging: ['error', 'query', 'schema'],
       synchronize: true,
-      entities: [User],
+      entities: [
+        SyncSession,
+        Node,
+        NodeType,
+        NodePropertyKey,
+        NodePropertyValue,
+        Relationship,
+        RelationshipType,
+        RelationshipPropertyKey,
+        RelationshipPropertyValue,
+      ],
     });
   }
 
   status() {
-    console.log("//todo");
+    console.log('//todo');
   }
 }
 
-export class UserRepository {
-  repository!: Repository<User>;
+// export class UserRepository {
+//   repository!: Repository<User>;
 
-  constructor(private dbService: DbService) {
-    this.repository = this.dbService.dataSource.getRepository(User);
-  }
+//   constructor(private dbService: DbService) {
+//     this.repository = this.dbService.dataSource.getRepository(User);
+//   }
 
-  async save(user: User) {
-    return this.repository.save(user);
-  }
+//   async save(user: User) {
+//     return this.repository.save(user);
+//   }
 
-  async all() {
-    return this.repository.find();
-  }
-}
+//   async all() {
+//     return this.repository.find();
+//   }
+// }

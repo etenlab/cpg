@@ -21,6 +21,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/sql.js": "^1.4.4",
     "@zip.js/zip.js": "^2.6.75",
+    "axios": "^1.3.4",
     "history": "^4.9.0",
     "ionicons": "^6.0.3",
     "localforage": "^1.10.0",
@@ -52,8 +53,10 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    "format": "prettier --write \"src/**/*.ts\"",
     "test": "react-app-rewired test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-app-rewired eject",
+    "format": "prettier --write \"src/**/*.ts\"",
     "ionic:serve": "react-app-rewired start"
   },
   "eslintConfig": {
@@ -85,6 +88,7 @@
     "https-browserify": "^1.0.0",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
+    "prettier": "^2.8.4",
     "process": "^0.11.10",
     "react-app-rewired": "^2.2.1",
     "stream-browserify": "^3.0.0",

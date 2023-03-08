@@ -1,16 +1,44 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, RelationId } from "typeorm"
-import { nanoid } from "nanoid"
-import { NodeType } from "./node-type.entity"
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  PrimaryColumn,
+  BeforeInsert,
+} from 'typeorm';
+import { nanoid } from 'nanoid';
+import { NodeType } from './node-type.entity';
+import { NodePropertyKey } from './node-property-key.entity';
+import { Relationship } from '../relationship/relationship.entity';
+import { Syncable } from '../Syncable';
 
 @Entity()
-export class Node {
-    @PrimaryColumn({ length: 21, unique: true, default: () => nanoid()})
-    node_uuid!: string
+export class Node extends Syncable {
+  @PrimaryColumn('uuid', { type: 'varchar', length: 21, unique: true })
+  id!: string;
 
-    @Column("null")
-    readonly node_id: number | undefined
+  @BeforeInsert()
+  setId() {
+    this.id = nanoid();
+  }
 
-    @ManyToOne(() => NodeType)
-    @RelationId((node_type: NodeType) => node_type.type_name)
-    node_type!: string
+  @Column('text', { nullable: true })
+  readonly node_id!: string | null;
+
+  @ManyToOne(() => NodeType, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'node_type', referencedColumnName: 'type_name' })
+  nodeType!: NodeType;
+
+  @Column('varchar')
+  node_type!: string;
+
+  @OneToMany(
+    () => NodePropertyKey,
+    (node_property_key) => node_property_key.node,
+  )
+  property_keys!: NodePropertyKey[];
+
+  @OneToMany(() => Relationship, (relationship) => relationship.fromNode)
+  node_relationships: Relationship[] | undefined;
 }

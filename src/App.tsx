@@ -1,7 +1,18 @@
 import { Link, Redirect, Route, useHistory } from 'react-router-dom';
-import { IonApp, IonContent, IonHeader, IonPage, IonRouterOutlet, IonTitle, IonToolbar, setupIonicReact, useIonRouter } from '@ionic/react';
+import {
+  IonApp,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonRouterOutlet,
+  IonTitle,
+  IonToolbar,
+  setupIonicReact,
+  useIonRouter,
+} from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
+import TablePage from './pages/TablePage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -33,71 +44,82 @@ import PericopeBoundariesPage from './pages/PericopeBoundariesPage';
 import LanguageProficiencyPage from './pages/LanguageProficiencyPage';
 import AdminPage from './pages/AdminPage';
 import LanguageListsPage from './pages/LanguageListsPage';
+import Dev from './pages/Dev';
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const router = useIonRouter()
-  return <IonApp>
-    <IonHeader>
-      <IonToolbar>
-        <IonTitle
-          onClick={(e) => {
-            e.preventDefault();
-            router.push('/home');
-          }}
-        >Crowd Peer Graph</IonTitle>
-      </IonToolbar>
-    </IonHeader>
-    <IonContent>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          <Route exact path="/home">
-            <Home />
-          </Route>
-          <Route exact path="/discussion">
-            <DiscussionDevelopmentPage />
-          </Route>
-          <Route exact path="/language-lists">
-            <LanguageListsPage />
-          </Route>
-          <Route exact path="/translation">
-            <TranslationPage />
-          </Route>
-          <Route exact path="/import-functions">
-            <ImportFunctionsPage />
-          </Route>
-          <Route exact path="/import-files">
-            <ImportFilesPage />
-          </Route>
-          <Route exact path="/graph-viewer">
-            <GraphViewerPage />
-          </Route>
-          <Route exact path="/dictionary">
-            <DictionaryPage />
-          </Route>
-          <Route exact path="/lexicon">
-            <LexiconPage />
-          </Route>
-          <Route exact path="/key-terms">
-            <KeyTermsPage />
-          </Route>
-          <Route exact path="/pericope-boundaries">
-            <PericopeBoundariesPage />
-          </Route>
-          <Route exact path="/language-proficiency">
-            <LanguageProficiencyPage />
-          </Route>
-          <Route exact path="/admin">
-            <AdminPage />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/home" />
-          </Route>
-        </IonRouterOutlet>
-      </IonReactRouter>
-    </IonContent>
-  </IonApp>
+  const router = useIonRouter();
+  return (
+    <IonApp>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle
+            onClick={(e) => {
+              e.preventDefault();
+              router.push('/home');
+            }}
+          >
+            Crowd Peer Graph
+          </IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route exact path="/home">
+              <Home />
+            </Route>
+            <Route exact path="/discussion">
+              <DiscussionDevelopmentPage />
+            </Route>
+            <Route exact path="/language-lists">
+              <LanguageListsPage />
+            </Route>
+            <Route exact path="/translation">
+              <TranslationPage />
+            </Route>
+            <Route exact path="/import-functions">
+              <ImportFunctionsPage />
+            </Route>
+            <Route exact path="/import-files">
+              <ImportFilesPage />
+            </Route>
+            <Route exact path="/graph-viewer">
+              <GraphViewerPage />
+            </Route>
+            <Route exact path="/dictionary">
+              <DictionaryPage />
+            </Route>
+            <Route exact path="/lexicon">
+              <LexiconPage />
+            </Route>
+            <Route exact path="/key-terms">
+              <KeyTermsPage />
+            </Route>
+            <Route exact path="/pericope-boundaries">
+              <PericopeBoundariesPage />
+            </Route>
+            <Route exact path="/language-proficiency">
+              <LanguageProficiencyPage />
+            </Route>
+            <Route exact path="/table">
+              <TablePage />
+            </Route>
+            <Route exact path="/admin">
+              <AdminPage />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/home" />
+            </Route>
+            <Route exact path="/dev">
+              <Dev />
+            </Route>
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </IonContent>
+    </IonApp>
+  );
 };
 
 export default App;

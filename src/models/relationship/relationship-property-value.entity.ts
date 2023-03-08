@@ -1,22 +1,40 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, Index, RelationId } from "typeorm"
-import { nanoid } from "nanoid"
-import { RelationshipPropertyKey } from "./relationship-property-key.entity"
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  OneToOne,
+  JoinColumn,
+  BeforeInsert,
+} from 'typeorm';
+import { nanoid } from 'nanoid';
+import { RelationshipPropertyKey } from './relationship-property-key.entity';
+import { Syncable } from '../Syncable';
 
 @Entity()
-export class RelationshipPropertyValue {
-    @PrimaryColumn({ length: 21, unique: true, default: () => nanoid()})
-    relationship_property_value_uuid!: string
+export class RelationshipPropertyValue extends Syncable {
+  @PrimaryColumn('uuid', { type: 'varchar', length: 21, unique: true })
+  id!: string;
 
-    @Column("null")
-    readonly relationship_property_value_id: number | undefined
+  @BeforeInsert()
+  setId() {
+    this.id = nanoid();
+  }
 
-    @Column("jsonb")
-    property_value!: JSON[]
+  @Column('text', { nullable: true })
+  readonly relationship_property_value_id!: string | null;
 
-    @ManyToOne(() => RelationshipPropertyKey)
-    relationship_property_key!: RelationshipPropertyKey
+  @Column('varchar')
+  property_value!: any;
 
-    @Index("idx_relationship_property_values_key_uuid")
-    @RelationId((relationship_property_key: RelationshipPropertyKey) => relationship_property_key.relationship_property_key_uuid)
-    relationship_property_key_uuid!: string
+  @OneToOne(() => RelationshipPropertyKey)
+  @JoinColumn({
+    name: 'id',
+    referencedColumnName: 'id',
+  })
+  property_key!: RelationshipPropertyKey;
+
+  @Column('varchar')
+  relationship_property_key_id!: string;
+
+  // @Index("idx_relationship_property_values_key_uuid")
 }

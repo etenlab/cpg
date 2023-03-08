@@ -1,22 +1,45 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, Index, RelationId } from "typeorm"
-import { nanoid } from "nanoid"
-import { NodePropertyKey } from "./node-property-key.entity"
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  OneToOne,
+  JoinColumn,
+  BeforeInsert,
+} from 'typeorm';
+import { nanoid } from 'nanoid';
+import { NodePropertyKey } from './node-property-key.entity';
+import { Syncable } from '../Syncable';
 
 @Entity()
-export class NodePropertyValue {
-    @PrimaryColumn({ length: 21, unique: true, default: () => nanoid()})
-    node_property_value_uuid!: string
+export class NodePropertyValue extends Syncable {
+  @PrimaryColumn('uuid', { type: 'varchar', length: 21, unique: true })
+  id!: string;
 
-    @Column("null")
-    readonly node_property_value_id: number | undefined
+  @BeforeInsert()
+  setId() {
+    this.id = nanoid();
+  }
 
-    @ManyToOne(() => NodePropertyKey)
-    node_property_key!: NodePropertyKey
+  @Column('text', { nullable: true })
+  readonly node_property_value_id!: string | null;
 
-    @Index("idx_node_property_values_key_uuid")
-    @RelationId((node_property_key: NodePropertyKey) => node_property_key.node_property_key_uuid)
-    node_property_key_uuid!: string
+  @Column('varchar')
+  property_value!: any;
 
-    @Column("jsonb")
-    property_value!: JSON[]
+  @OneToOne(
+    () => NodePropertyKey,
+    (nodePropertyKey) => nodePropertyKey.property_value,
+  )
+  @JoinColumn({
+    name: 'id',
+    referencedColumnName: 'id',
+  })
+  property_key!: NodePropertyKey;
+
+  @Column('varchar')
+  node_property_key_id!: string;
+
+  // @Index("idx_node_property_values_key_id")
+  // @RelationId((node_property_key: NodePropertyKey) => node_property_key.node_property_key_id)
+  // node_property_key_id!: string
 }
