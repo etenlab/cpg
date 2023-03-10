@@ -32,8 +32,8 @@ const TableAddForm: React.FC<ContainerProps> = ({
   const tableNames = () => {
     return tables.map(
       (table) =>
-        table.property_keys.find((key) => key.property_key === "name")
-          ?.property_value?.property_value || ""
+        table.propertyKeys.find((key) => key.property_key === "name")
+          ?.propertyValue?.property_value || ""
     );
   };
 

@@ -55,5 +55,5 @@ export class Relationship extends Syncable {
     () => RelationshipPropertyKey,
     (relationship_property_key) => relationship_property_key.relationship,
   )
-  property_keys!: RelationshipPropertyKey[];
+  propertyKeys!: RelationshipPropertyKey[];
 }

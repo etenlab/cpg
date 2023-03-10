@@ -36,6 +36,9 @@ export class NodeService {
     );
     this.relationshipPropertyValueRepo =
       new RelationshipPropertyValueRepository(dbService, syncService);
+
+    this.createWord("Kij");
+    this.createWord("kij");
   }
 
   // Layer 2
@@ -234,9 +237,9 @@ export class NodeService {
           nodeType: {
             type_name: 'table',
           },
-          property_keys: {
+          propertyKeys: {
             property_key: 'name',
-            property_value: {
+            propertyValue: {
               property_value: name,
             },
           },
@@ -276,8 +279,8 @@ export class NodeService {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const new_cell: TableCell = {};
-      table_cell?.property_keys.forEach((key) => {
-        (new_cell as any)[key.property_key] = key.property_value.property_value;
+      table_cell?.propertyKeys.forEach((key) => {
+        (new_cell as any)[key.property_key] = key.propertyValue.property_value;
       });
 
       return new_cell;
@@ -328,8 +331,13 @@ export class NodeService {
 
   // -------- Word --------- //
 
-  async createWord(name: string): Promise<Word> {
+  async createWord(name: string): Promise<Word | null> {
     try {
+      if (await this.getWord(name)) {
+        console.log('conflict: ', name)
+        return null;
+      }
+      console.log('no conflict: ', name)
       const word = await this.createNodeFromObject('word', {
         name: {
           value: name,
@@ -388,7 +396,7 @@ export class NodeService {
         'word-sequence-to-word',
         { position: i + 1 },
         word_sequence.id,
-        new_word.id,
+        new_word?.id,
       );
     }
 
@@ -430,8 +438,8 @@ export class NodeService {
     word_sequence.node_relationships.forEach((rel) => {
       if (rel.relationship_type === 'word-sequence-to-word') {
         words.push(
-          rel.toNode.property_keys.find((key) => key.property_key === 'word')
-            ?.property_value.property_value,
+          rel.toNode.propertyKeys.find((key) => key.property_key === 'word')
+            ?.propertyValue.property_value,
         );
       }
     });

@@ -31,7 +31,7 @@ export class RelationshipPropertyValue extends Syncable {
     name: 'id',
     referencedColumnName: 'id',
   })
-  property_key!: RelationshipPropertyKey;
+  propertyKey!: RelationshipPropertyKey;
 
   @Column('varchar')
   relationship_property_key_id!: string;

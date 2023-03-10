@@ -42,7 +42,7 @@ export class RelationshipPropertyKey extends Syncable {
 
   @OneToOne(
     () => RelationshipPropertyValue,
-    (relationshipPropertyValue) => relationshipPropertyValue.property_key,
+    (relationshipPropertyValue) => relationshipPropertyValue.propertyKey,
   )
-  property_value!: RelationshipPropertyValue;
+  propertyValue!: RelationshipPropertyValue;
 }

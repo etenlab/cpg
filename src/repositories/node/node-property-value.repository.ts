@@ -28,7 +28,7 @@ export class NodePropertyValueRepository {
       sync_layer: this.syncService.syncLayer,
     });
 
-    new_property_value_instance.property_key = node_property_key;
+    new_property_value_instance.propertyKey = node_property_key;
 
     const node_property_value = await this.repository.save(
       new_property_value_instance,

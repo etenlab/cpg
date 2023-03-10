@@ -37,7 +37,7 @@ export class Node extends Syncable {
     () => NodePropertyKey,
     (node_property_key) => node_property_key.node,
   )
-  property_keys!: NodePropertyKey[];
+  propertyKeys!: NodePropertyKey[];
 
   @OneToMany(() => Relationship, (relationship) => relationship.fromNode)
   node_relationships: Relationship[] | undefined;

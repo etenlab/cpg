@@ -26,6 +26,9 @@
     "ionicons": "^6.0.3",
     "localforage": "^1.10.0",
     "nanoid": "^4.0.1",
+    "proskomma": "^0.9.3",
+    "proskomma-freeze": "^0.7.0",
+    "proskomma-react-hooks": "^2.4.0-rc.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^5.2.0",
@@ -56,7 +59,6 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "react-app-rewired test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-app-rewired eject",
-    "format": "prettier --write \"src/**/*.ts\"",
     "ionic:serve": "react-app-rewired start"
   },
   "eslintConfig": {

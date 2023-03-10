@@ -35,9 +35,9 @@ export class NodeRepository {
     const nodes = await this.repository.find({
       relations: ['nodeType', 'property_keys', 'property_keys.property_value'],
       select: {
-        property_keys: {
+        propertyKeys: {
           property_key: true,
-          property_value: {
+          propertyValue: {
             property_value: true,
           },
         },
@@ -67,9 +67,9 @@ export class NodeRepository {
         nodeType: {
           type_name: type,
         },
-        property_keys: {
+        propertyKeys: {
           property_key: prop.key,
-          property_value: {
+          propertyValue: {
             property_value: prop.val,
           },
         },
