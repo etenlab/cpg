@@ -26,7 +26,7 @@ export class NodePropertyValueRepository {
       property_value: JSON.stringify({ value: key_value }),
       node_property_key_id: key_id,
       sync_layer: this.syncService.syncLayer,
-    });
+    } as NodePropertyValue);
 
     new_property_value_instance.propertyKey = node_property_key;
 

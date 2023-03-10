@@ -21,11 +21,11 @@ const Table: React.FC = () => {
 
   const getTables = () => {
     nodeService?.nodeRepo.listAllNodesByType("table").then((data) => {
-      if (data) {
+      if (data.length) {
         setTables(data);
         if (!currentTable) {
           const table = tableNodeToTable(data[0]);
-          setCurrentTable(table);
+          getCurrentTable(table.name)
           setCurrentTableName(table.name);
         }
       }

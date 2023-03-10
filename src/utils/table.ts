@@ -1,18 +1,18 @@
 import { Node } from '../models';
 
 export const tableNodeToTable = (node: Node) => {
-  const cells = node.node_relationships?.map((cell) => {
+  const cells = node.nodeRelationships?.map((cell) => {
     let cell_data: TableCell = {};
-    cell.toNode.propertyKeys.forEach((key) => {
-      (cell_data as any)[key.property_key] = key.propertyValue.property_value;
+    cell.toNode.propertyKeys?.forEach((key) => {
+      (cell_data as any)[key.property_key] = JSON.parse(key.propertyValue.property_value).value;
     });
     return cell_data;
   });
 
   let name = '';
-  node.propertyKeys.forEach((key) => {
+  node.propertyKeys?.forEach((key) => {
     if (key.property_key === 'name') {
-      name = key.propertyValue.property_value;
+      name = JSON.parse(key.propertyValue.property_value).value;
     }
   });
 
