@@ -7,6 +7,8 @@ import {
 } from "@ionic/react";
 import { useEffect, useState, useRef } from "react";
 import JSZip from "jszip";
+const { Proskomma } = require('proskomma');
+const { freeze, thaw } = require('proskomma-freeze');
 
 const links = [
   "https://app.thedigitalbiblelibrary.org/entry/download_archive?id=bf8f1c7f3f9045a5&license=10453&revision=1&type=release",
@@ -37,6 +39,7 @@ const links = [
 const ImportFilesPage: React.FC = () => {
   const buttonsRef = useRef<Array<HTMLAnchorElement | null>>([]);
   const [downloadIndex, setDownloadIndex] = useState(0);
+  const [words, setWords] = useState<string[]>([])
 
   useEffect(() => {
     buttonsRef.current = buttonsRef.current.slice(0, links.length);
@@ -51,18 +54,58 @@ const ImportFilesPage: React.FC = () => {
     }
   };
 
-  const openFileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const openFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.item(0)) {
       return;
     }
-    JSZip.loadAsync(e.target.files[0]).then(function (zip) {
-      Object.keys(zip.files).forEach(function (filename) {
-        zip.files[filename].async("string").then(function (fileData) {
-          console.log(filename);
-          console.log(fileData);
-        });
-      });
-    });
+    const zip = await JSZip.loadAsync(e.target.files[0]);
+    const _words = [];
+    for (const filename of Object.keys(zip.files))
+    {
+      console.log(filename.endsWith('.usx'));
+      if (filename.endsWith('.usx')) {
+        const fileData = await zip.files[filename].async("string");
+        const pk = new Proskomma();
+        pk.importDocument(
+          {
+            lang: 'eng',
+            abbr: 'web',
+          },
+          'usx',
+          fileData,
+          {},
+        );
+        // const frozen = await freeze(pk);
+        // const pk2 = new Proskomma();
+        // await thaw(
+        //   pk2,
+        //   frozen,
+        // );
+        const result = pk.gqlQuerySync(`{
+          documents {
+            mainSequence {
+              blocks {
+                items {
+                  type
+                  subType
+                  payload
+                }
+              }
+            }
+          }
+        }`);
+        console.log(result);
+        for (const block of result.data.documents[0].mainSequence.blocks) {
+          for (const item of block.items) {
+            if (item.type === "token" && item.payload !== " ") {
+              _words.push(item.payload);
+            }
+          }
+        }
+        break;
+      }
+    }
+    setWords(_words);
   };
 
   return (
@@ -89,6 +132,9 @@ const ImportFilesPage: React.FC = () => {
         {downloadIndex === links.length && <div>Download Finished.</div>}
         <div>
           <input type={"file"} multiple onChange={openFileHandler} />
+        </div>
+        <div>
+          {words.map((word) => <div>{word}</div>)}
         </div>
       </IonContent>
     </IonPage>

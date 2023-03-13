@@ -18,6 +18,7 @@ const TableList: React.FC<ContainerProps> = ({ currentTable }) => {
       for (let col of cols) table[row][col] = "";
   }
   currentTable?.cells?.forEach((cell) => {
+    console.log(cell)
     table[cell.row ?? ""][cell.column ?? ""] = cell.data;
   });
 
@@ -27,12 +28,12 @@ const TableList: React.FC<ContainerProps> = ({ currentTable }) => {
       <table className="table">
         <thead>
           <tr>
-            {Array.from(cols).map((col) => <th>{col}</th>)}
+            {Array.from(cols).map((col, index) => <th key={`table-${currentTable?.id}-col${index}`}>{col}</th>)}
           </tr>
         </thead>
         <tbody>
-          {Object.values(table).map((row) => <tr>
-            {Object.values(row as Array<string>).map((data) => <td>{data}</td>)}
+          {Object.values(table).map((row, index) => <tr key={`table-${currentTable?.id}-row${index}`}>
+            {Object.values(row as Array<string>).map((data, tdId) => <td key={`table-${currentTable?.id}-row${index}-col${tdId}`}>{data}</td>)}
           </tr>)}
         </tbody>
       </table>

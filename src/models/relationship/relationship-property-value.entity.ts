@@ -28,10 +28,10 @@ export class RelationshipPropertyValue extends Syncable {
 
   @OneToOne(() => RelationshipPropertyKey)
   @JoinColumn({
-    name: 'id',
+    name: 'relationship_property_key_id',
     referencedColumnName: 'id',
   })
-  property_key!: RelationshipPropertyKey;
+  propertyKey!: RelationshipPropertyKey;
 
   @Column('varchar')
   relationship_property_key_id!: string;
